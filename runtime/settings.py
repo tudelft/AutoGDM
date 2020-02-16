@@ -1,8 +1,8 @@
 # environment related settings
 
-size_x = 10000
-size_y = 10000
-height = 2000
+size_x = 10
+size_y = 10
+height = 2
 
 walls_input_folder = "../pics/white_walls/"
 walls_output_folder = "../CAD_files/walls/"
