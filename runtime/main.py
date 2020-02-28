@@ -2,6 +2,7 @@ from settings import *
 import glob
 import os
 import imageio
+import mpi4py.MPI
 
 class environment:
     def __init__(self,img_location):
@@ -37,12 +38,18 @@ class environment:
 
 
 if __name__=="__main__":
-    ## read in all environment pics
+    #find out which number processor this particular instance is,
+    #and how many there are in total
+    rank = mpi4py.MPI.COMM_WORLD.Get_rank()
+    size = mpi4py.MPI.COMM_WORLD.Get_size()
+
+    # read in all environment pics
     environments = []
     for file in glob.glob(env_pics_folder+"/*"):
         environments.append(environment(os.path.abspath(file)))
     
-    for env in environments:
+    for i,env in enumerate(environments):
+        if i%size!=rank: continue
         env.invert_img()
         env.create_cfd_folder()
         env.extrude_imgs()
