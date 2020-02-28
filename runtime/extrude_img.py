@@ -21,16 +21,15 @@ def extrude_imgs(extrude_inside):
         output_folder = inside_output_folder
 
     for file in glob.glob(input_folder+"*"):
-        if i ==0:
-            # compute absolute paths
-            input_path = os.path.abspath(file)
-            output_path = os.path.abspath(output_folder + input_path.split(".")[0].split('/')[-1]+".stl")
-            
-            # execute command
-            command = "java -jar "+java_loc+" -input_file "+ input_path + " -output_file "+ output_path + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
-            os.system(command)
-            print(i)
-            i+=1
+        # compute absolute paths
+        input_path = os.path.abspath(file)
+        output_path = os.path.abspath(output_folder + input_path.split(".")[0].split('/')[-1]+".stl")
+        
+        # execute command
+        command = "java -jar "+java_loc+" -input_file "+ input_path + " -output_file "+ output_path + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
+        os.system(command)
+        print(i)
+        i+=1
     # os.system('rm -rf test')
 
 def invert_imgs():
