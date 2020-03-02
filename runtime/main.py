@@ -48,6 +48,10 @@ if __name__=="__main__":
     for file in glob.glob(env_pics_folder+"/*"):
         environments.append(environment(os.path.abspath(file)))
     
+    # check if inversed folder exists, if not create
+    if not os.path.exists(os.path.abspath(env_pics_folder_inversed)):
+        os.system('mkdir ' + env_pics_folder_inversed)
+
     for i,env in enumerate(environments):
         if i%size!=rank: continue
         env.invert_img()
