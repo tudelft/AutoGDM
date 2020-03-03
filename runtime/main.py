@@ -3,6 +3,7 @@ import glob
 import os
 import imageio
 import mpi4py.MPI
+from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile
 
 class environment:
     def __init__(self,img_location):
@@ -27,16 +28,42 @@ class environment:
     def extrude_imgs(self):
 
         # generate cad of environment for sim
-        self.env_cat_loc = self.cfd_folder + '/constant/polyMesh/'+self.id+'_env.stl'
+        self.env_cat_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_env.stl'
         command = "java -jar "+java_loc+" -input_file "+ self.img_location + " -output_file "+ self.env_cat_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
         os.system(command)
 
         # generate cad of inside environment for cfd
-        self.env_flow_loc = self.cfd_folder + '/constant/polyMesh/'+self.id+'_flow_vol.stl'
+        self.env_flow_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_flow_vol.stl'
         command = "java -jar "+java_loc+" -input_file "+ self.img_inverted_location + " -output_file "+ self.env_flow_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
         os.system(command)
 
+    def pre_snappyhex(self):
 
+        # pointing surfaceFeatureExtract to the right .stl file
+        featuredir = os.path.abspath(self.cfd_folder)+'/system/surfaceFeatureExtractDict'
+        f = ParsedParameterFile(featuredir)
+        self.flow_vol_id = self.env_flow_loc.split('/')[-1]
+        f[self.flow_vol_id] = {'extractionMethod': 'extractFromSurface', 'extractFromSurfaceCoeffs': {'includedAngle': 120}} 
+        f.writeFile()
+        
+        # run surface feature extract
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && surfaceFeatureExtract')
+    
+        self.feature_files = []
+        for file in glob.glob(os.path.abspath(self.cfd_folder)+"/constant/triSurface/**.eMesh"):
+            self.feature_files.append(file)
+        
+        snappydir = os.path.abspath(self.cfd_folder)+'/system/snappyHexMeshDict'
+        f = ParsedParameterFile(snappydir)
+
+        
+        file_entry =  "\"" + self.flow_vol_id + "\""
+        f['geometry'] = {self.flow_vol_id: {'type': 'triSurfaceMesh', 'file': file_entry  , 'name': 'flow_vol'}}
+        print(f['castellatedMeshControls']['features'])
+
+        f.writeFile()
+
+        
 if __name__=="__main__":
     #find out which number processor this particular instance is,
     #and how many there are in total
@@ -57,5 +84,6 @@ if __name__=="__main__":
         env.invert_img()
         env.create_cfd_folder()
         env.extrude_imgs()
+        env.pre_snappyhex()
 
         
