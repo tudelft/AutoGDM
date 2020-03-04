@@ -14,14 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-B1_TE6.stl
-{
-	extractionMethod extractFromSurface;
 
-	extractFromSurfaceCoeffs
-	{
-		includedAngle 120;
-	}
-}
 
 // ************************************************************************* //

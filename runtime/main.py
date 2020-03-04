@@ -59,9 +59,17 @@ class environment:
         
         file_entry =  "\"" + self.flow_vol_id + "\""
         f['geometry'] = {self.flow_vol_id: {'type': 'triSurfaceMesh', 'file': file_entry  , 'name': 'flow_vol'}}
-        print(f['castellatedMeshControls']['features'])
 
+        features_string = []
+        for feature in self.feature_files:
+            features_string.append({'file': "\"" + feature.split("/")[-1] + "\"", 'level': 3})
+
+        f['castellatedMeshControls']['features'] = features_string
+        f['castellatedMeshControls']['refinementSurfaces'] = {'flow_vol': {'level': [3, 3]}}
         f.writeFile()
+    
+    def snappyhexmesh(self):
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && snappyHexMesh')
 
         
 if __name__=="__main__":
@@ -85,5 +93,10 @@ if __name__=="__main__":
         env.create_cfd_folder()
         env.extrude_imgs()
         env.pre_snappyhex()
+
+    for i,env in enumerate(environments):
+        if i%size!=rank: continue
+        env.snappyhexmesh()
+
 
         
