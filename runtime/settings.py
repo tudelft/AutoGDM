@@ -4,6 +4,9 @@ size_x = 10
 size_y = 10
 height = 2
 
+point_clearance = 5
+max_it = 500
+
 env_pics_folder = "../environments/pics/white_walls"
 env_pics_folder_inversed = "../environments/pics/white_space"
 
