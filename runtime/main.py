@@ -22,7 +22,6 @@ class environment:
         self.img_inverted_location = os.path.abspath(env_pics_folder_inversed) + '/' + self.id +'.png'
         imageio.imwrite(self.img_inverted_location,self.img_inverted)
         
-
     def create_cfd_folder(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
         if os.path.exists(self.cfd_folder):
@@ -68,8 +67,6 @@ class environment:
         out = np.array(cv2.threshold(cv2.cvtColor(out, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY)[1])
 
         found_empty_point = False 
-
-        i = 0
         while found_empty_point == False:
             x, y = random.randint(0,self.img_shape[0]), random.randint(0,self.img_shape[1])
             x_min, x_max, y_min, y_max = x-point_clearance, x+point_clearance, y-point_clearance, y+ point_clearance
@@ -116,8 +113,19 @@ class environment:
         f.writeFile()
     
     def snappyhexmesh(self):
-        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && snappyHexMesh -overwrite')
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && snappyHexMesh -overwrite && autoPatch -overwrite ' + str(autopatch_angle))
+        
+    def read_surfaces(self):
+        self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
+        self.boundary_folder = self.cfd_folder + '/constant/polyMesh/'
+        self.patches = []
 
+        f = open(self.boundary_folder+'boundary')
+        self.patch_file = f.readlines()
+        for line in self.patch_file:
+            if 'auto' in line:
+                self.patches.append(line.split('\n')[0].strip())
+                
         
 if __name__=="__main__":
     #find out which number processor this particular instance is,
@@ -135,16 +143,12 @@ if __name__=="__main__":
         os.system('mkdir ' + env_pics_folder_inversed)
 
     for i,env in enumerate(environments):
+    #     if i%size!=rank: continue
+    #     env.invert_img()
+    #     env.create_cfd_folder()install paraview python
         if i%size!=rank: continue
-        env.invert_img()
-        env.create_cfd_folder()
-        env.extrude_imgs()
-        env.find_largest_space()
-        env.pre_snappyhex()
-        print(env.empty_point)
-    for i,env in enumerate(environments):
-        if i%size!=rank: continue
-        env.snappyhexmesh()
+        # env.snappyhexmesh()
+        env.read_surfaces()
 
 
         
