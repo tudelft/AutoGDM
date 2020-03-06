@@ -81,16 +81,7 @@ class environment:
             elif i>max_it:
                 self.empty_point = (size_x/2,size_y/2)
                 found_empty_point = True
-                
-        print(self.id)
-        plt.imshow(out)
-        plt.scatter(x,y)
-        print(self.empty_point[0],self.empty_point[1])
-        plt.show()
-
-        # cv2.circle(out, (cX, cY), 7, (0, 255, 0), -1)
-
-        # cv2.waitKey(0)
+        
 
     def pre_snappyhex(self):
 
@@ -121,6 +112,7 @@ class environment:
 
         f['castellatedMeshControls']['features'] = features_string
         f['castellatedMeshControls']['refinementSurfaces'] = {'flow_vol': {'level': [3, 3]}}
+        f['castellatedMeshControls']['locationInMesh'] = "(" + str(self.empty_point[0]) +" " + str(self.empty_point[1]) +" " + str(1) + ")"
         f.writeFile()
     
     def snappyhexmesh(self):
@@ -145,13 +137,14 @@ if __name__=="__main__":
     for i,env in enumerate(environments):
         if i%size!=rank: continue
         env.invert_img()
-        # env.create_cfd_folder()
-        # env.extrude_imgs()
-        # env.pre_snappyhex()
+        env.create_cfd_folder()
+        env.extrude_imgs()
         env.find_largest_space()
-    # for i,env in enumerate(environments):
-    #     if i%size!=rank: continue
-    #     env.snappyhexmesh()
+        env.pre_snappyhex()
+        print(env.empty_point)
+    for i,env in enumerate(environments):
+        if i%size!=rank: continue
+        env.snappyhexmesh()
 
 
         
