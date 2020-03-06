@@ -116,7 +116,7 @@ class environment:
         f.writeFile()
     
     def snappyhexmesh(self):
-        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && snappyHexMesh')
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && snappyHexMesh -overwrite')
 
         
 if __name__=="__main__":
