@@ -9,12 +9,15 @@ import imutils
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+import re 
+
 
 class patch:
-    def __init__(self, id, nfaces ):
+    def __init__(self, id, start_face, nfaces ):
         self.id = id
+        self.start = start_face
         self.nfaces = nfaces
-
+        self.type = 'wall'
 class environment:
     def __init__(self,img_location):
         self.img_location = img_location
@@ -46,6 +49,7 @@ class environment:
         self.env_flow_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_flow_vol.stl'
         command = "java -jar "+java_loc+" -input_file "+ self.img_inverted_location + " -output_file "+ self.env_flow_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
         os.system(command)
+
 
     def find_largest_space(self):
         image = cv2.imread(self.img_inverted_location)
@@ -125,20 +129,152 @@ class environment:
         self.boundary_folder = self.cfd_folder + '/constant/polyMesh/'
         self.patches = []
 
-        sort_arr = []
         f = open(self.boundary_folder+'boundary')
         self.patch_file = f.readlines()
+        
+        write_lines = []
+        pause_writing = False
         for i, line in enumerate(self.patch_file):
-            if 'auto' in line:
+            if line.replace('\n','').isdigit():
+                line = str(int(line)-1) + '\n'
+            elif 'flow_vol' in line:
+                pause_writing = True
+            elif 'auto' in line:
                 patch_name = line.split('\n')[0].strip()
-                str = self.patch_file[i+3]
-                nFaces = [int(s) for s in str.replace(';','').split() if s.isdigit()]
-                self.patches.append(patch(patch_name,nFaces[0]))
-                sort_arr.append((patch_name,nFaces[0]))
-        dtype = [('name','U10'),('nFaces',int)]
-        a = np.array(sort_arr,dtype)
-        b = np.sort(a,order='nFaces')
-        print(b)
+                string = self.patch_file[i+4]
+                start_face = [int(s) for s in string.replace(';','').split() if s.isdigit()]
+                string = self.patch_file[i+3]
+                nFaces = [int(s) for s in string.replace(';','').split() if s.isdigit()]
+                self.patches.append(patch(patch_name,start_face[0],nFaces[0]))
+                pause_writing = False
+            elif 'patch' in line:
+                line = line.replace('patch','wall')
+            
+            if pause_writing == False:
+                write_lines.append(line)
+        
+        f = open(self.boundary_folder+'boundary',"w")
+        f.writelines(write_lines)
+        f.close()
+
+
+    def read_faces(self):
+        f = open(self.boundary_folder+'faces')
+        self.faces = f.readlines()
+
+        found_start = False
+        faces = []
+
+        for i, line in enumerate(self.faces):
+            if line.find(")") == 0:
+                break
+            
+            elif found_start:
+
+                line = line.replace("("," ").replace(")"," ").split()[1::]
+                faces.append([int(s) for s in line if s.isdigit() ])  
+
+            elif line.find("(") == 0:
+                    found_start = True
+            
+        self.faces = faces
+    
+    def read_points(self):
+        f = open(self.boundary_folder+'points')
+        self.points = f.readlines()
+
+        found_start = False
+        points = []
+
+        for i, line in enumerate(self.points):
+            if line.find(")") == 0:
+                break
+
+            elif found_start:
+                line = line.replace("("," ").replace(")"," ").split()[-1]
+                points.append(float(line))    
+
+            elif line.find("(") == 0:
+                found_start = True
+                    
+        self.points = points
+    
+    def find_walls(self):
+        for patch in self.patches:
+            faces = self.faces[patch.start:patch.start+patch.nfaces]
+            flattened = [val for sublist in faces for val in sublist]
+            points = []
+            minval = maxval = self.points[flattened[0]]
+
+            for point in flattened:
+                z = self.points[point]
+                if z > maxval:
+                    maxval = z 
+                elif z<minval:
+                    minval = z 
+            
+            patch.delta_z = maxval-minval
+    
+    def pick_boundaries(self):
+        dtype = [('ID','U10'),('nfaces',int),('delta_z',float)]
+
+        patches = []
+        for patch in self.patches:
+            patches.append((patch.id,patch.nfaces,patch.delta_z))
+        
+        sort_arr = np.array(patches,dtype=dtype)
+        sorted_arr = np.sort(sort_arr,order=['delta_z','nfaces'])
+        sorted_arr = sorted_arr[-top_surfaces::]
+        
+        idxs = random.sample(range(0, top_surfaces  ), 2)
+        self.inlet, self.outlet = sorted_arr[idxs[0]][0], sorted_arr[idxs[1]][0]
+
+        for patch in self.patches:
+            if patch.id == self.inlet:
+                patch.type = 'inlet'
+            elif patch.id == self.outlet:
+                patch.type = 'outlet'
+
+
+    def set_boundary_conditions(self):
+        self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
+        featuredir = os.path.abspath(self.cfd_folder)+'/0/'
+        
+        U = ParsedParameterFile(featuredir+'U')
+        p = ParsedParameterFile(featuredir+'p')
+        nut = ParsedParameterFile(featuredir+'nut')
+        k = ParsedParameterFile(featuredir+'k')
+        eps = ParsedParameterFile(featuredir+'epsilon')
+
+        for patch in self.patches:
+            if patch.type == 'wall':
+                U['boundaryField'][patch.id] = {'type': 'movingWallVelocity', 'value': 'uniform (0 0 0)'}
+                p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
+                nut['boundaryField'][patch.id] = {'type': 'nutkWallFunction','value':'uniform 0'}
+                k['boundaryField'][patch.id] = {'type': 'kqRWallFunction','value':'uniform 0.00375'}
+                eps['boundaryField'][patch.id] = {'type': 'epsilonWallFunction','value':'uniform 0.0125'}
+            elif patch.type == 'inlet':
+                U['boundaryField'][patch.id] = {'type': 'zeroGradient'}
+                p['boundaryField'][patch.id] = {'type': 'fixedValue', 'value': 'uniform 0'}
+                nut['boundaryField'][patch.id] = {'type': 'nutkWallFunction','value':'uniform 0'}
+                k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
+                eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
+            elif patch.type == 'outlet':
+                U['boundaryField'][patch.id] = {'type': 'fixedValue', 'value': 'uniform (0 10 0)'}           
+                p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
+                nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
+                k['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.00375'}
+                eps['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.0125'}
+            
+        U.writeFile()
+        p.writeFile()
+        nut.writeFile()
+        k.writeFile()
+        eps.writeFile()
+    
+    def run_cfd(self):
+        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && pimpleFoam')
+
 
 if __name__=="__main__":
     #find out which number processor this particular instance is,
@@ -157,11 +293,22 @@ if __name__=="__main__":
 
     for i,env in enumerate(environments):
     #     if i%size!=rank: continue
-    #     env.invert_img()
-    #     env.create_cfd_folder()install paraview python
+        env.invert_img()
+        env.create_cfd_folder()
+        env.extrude_imgs()
         if i%size!=rank: continue
-        # env.snappyhexmesh()
+
+        env.find_largest_space()
+        env.pre_snappyhex()
+
+        env.snappyhexmesh()
         env.read_surfaces()
+        env.read_faces()
+        env.read_points()
+        env.find_walls()
+        env.pick_boundaries()
+        env.set_boundary_conditions()
+        env.run_cfd()
 
 
         
