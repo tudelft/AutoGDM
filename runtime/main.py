@@ -10,6 +10,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 
+class patch:
+    def __init__(self, id, nfaces ):
+        self.id = id
+        self.nfaces = nfaces
+
 class environment:
     def __init__(self,img_location):
         self.img_location = img_location
@@ -120,13 +125,21 @@ class environment:
         self.boundary_folder = self.cfd_folder + '/constant/polyMesh/'
         self.patches = []
 
+        sort_arr = []
         f = open(self.boundary_folder+'boundary')
         self.patch_file = f.readlines()
-        for line in self.patch_file:
+        for i, line in enumerate(self.patch_file):
             if 'auto' in line:
-                self.patches.append(line.split('\n')[0].strip())
-                
-        
+                patch_name = line.split('\n')[0].strip()
+                str = self.patch_file[i+3]
+                nFaces = [int(s) for s in str.replace(';','').split() if s.isdigit()]
+                self.patches.append(patch(patch_name,nFaces[0]))
+                sort_arr.append((patch_name,nFaces[0]))
+        dtype = [('name','U10'),('nFaces',int)]
+        a = np.array(sort_arr,dtype)
+        b = np.sort(a,order='nFaces')
+        print(b)
+
 if __name__=="__main__":
     #find out which number processor this particular instance is,
     #and how many there are in total
