@@ -9,8 +9,7 @@ import imutils
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-import re 
-
+import pandas as pd
 
 class patch:
     def __init__(self, id, start_face, nfaces ):
@@ -18,6 +17,11 @@ class patch:
         self.start = start_face
         self.nfaces = nfaces
         self.type = 'wall'
+
+class flow_field:
+    def __init__(self,id):
+        self.id = id
+
 class environment:
     def __init__(self,img_location):
         self.img_location = img_location
@@ -248,18 +252,20 @@ class environment:
 
         for patch in self.patches:
             if patch.type == 'wall':
-                U['boundaryField'][patch.id] = {'type': 'movingWallVelocity', 'value': 'uniform (0 0 0)'}
+                # U['boundaryField'][patch.id] = {'type': 'movingWallVelocity', 'value': 'uniform (0 0 0)'}
+                U['boundaryField'][patch.id] = {'type': 'noSlip'}
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'nutkWallFunction','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'kqRWallFunction','value':'uniform 0.00375'}
                 eps['boundaryField'][patch.id] = {'type': 'epsilonWallFunction','value':'uniform 0.0125'}
-            elif patch.type == 'inlet':
+            elif patch.type == 'outlet':
                 U['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 p['boundaryField'][patch.id] = {'type': 'fixedValue', 'value': 'uniform 0'}
-                nut['boundaryField'][patch.id] = {'type': 'nutkWallFunction','value':'uniform 0'}
+                # nut['boundaryField'][patch.id] = {'type': 'nutkWallFunction','value':'uniform 0'}
+                nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
-            elif patch.type == 'outlet':
+            elif patch.type == 'inlet':
                 U['boundaryField'][patch.id] = {'type': 'fixedValue', 'value': 'uniform (0 10 0)'}           
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
@@ -273,42 +279,94 @@ class environment:
         eps.writeFile()
     
     def run_cfd(self):
+        self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
         os.system('cd '+ os.path.abspath(self.cfd_folder) +' && pimpleFoam')
+
+    def export_csv(self):
+        self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
+        # os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
+
+        f = open(self.cfd_folder+'/0/C')
+        self.points_file = f.readlines()    
+        self.points_x = []
+        self.points_y = []
+        self.points_z = []
+
+        for i,line in enumerate(self.points_file):
+            if i >=22:
+                if line.find(")") == 0:
+                    break
+                
+                line = line.replace("("," ").replace(")"," ").split()
+                self.points_x.append(float(line[0]))
+                self.points_y.append(float(line[1]))
+                self.points_z.append(float(line[2]))
+        
+        self.flow_fields = []
+
+        for folder in glob.glob(self.cfd_folder+"/0.*"):
+
+            timestep = flow_field(folder.split('/')[-1])
+            f = open(folder+'/U')
+            flow_data = f.readlines()    
+            Ux = []
+            Uy = []
+            Uz = []
+
+            for i,line in enumerate(flow_data):
+                if i >=22:
+                    if line.find(")") == 0:
+                        break
+                    
+                    line = line.replace("("," ").replace(")"," ").split()
+                    Ux.append(float(line[0]))
+                    Uy.append(float(line[1]))
+                    Uz.append(float(line[2]))
+            
+            timestep.Ux, timestep.Uy, timestep.Uz = Ux, Uy, Uz
+            self.flow_fields.append(timestep)
+        
+        for timestep in self.flow_fields:
+            data = {'U:0': timestep.Ux, 'U:1':timestep.Uy,'U:2':  timestep.Uz,'Points:0':self.points_x,'Points:1':self.points_y,'Points:2':self.points_z}
+            df = pd.DataFrame(data, columns= ['U:0','U:1','U:2','Points:0','Points:1','Points:2'])
+            df.to_csv(timestep.id+'.csv',index=False,header=True)
+            
 
 
 if __name__=="__main__":
-    #find out which number processor this particular instance is,
-    #and how many there are in total
+    # #find out which number processor this particular instance is,
+    # #and how many there are in total
     rank = mpi4py.MPI.COMM_WORLD.Get_rank()
     size = mpi4py.MPI.COMM_WORLD.Get_size()
 
-    # read in all environment pics
+    # # read in all environment pics
     environments = []
     for file in glob.glob(env_pics_folder+"/*"):
         environments.append(environment(os.path.abspath(file)))
     
-    # check if inversed folder exists, if not create
+    # # check if inversed folder exists, if not create
     if not os.path.exists(os.path.abspath(env_pics_folder_inversed)):
         os.system('mkdir ' + env_pics_folder_inversed)
 
-    for i,env in enumerate(environments):
+    # for i,env in enumerate(environments):
     #     if i%size!=rank: continue
-        env.invert_img()
-        env.create_cfd_folder()
-        env.extrude_imgs()
+    #     env.invert_img()
+    #     env.create_cfd_folder()
+    #     env.extrude_imgs()
+    #     env.find_largest_space()
+    #     env.pre_snappyhex()
+    #     env.snappyhexmesh()
+    #     env.read_surfaces()
+    #     env.read_faces()
+    #     env.read_points()
+    #     env.find_walls()
+    #     env.pick_boundaries()
+    #     env.set_boundary_conditions()
+    
+    for i,env in enumerate(environments):
         if i%size!=rank: continue
-
-        env.find_largest_space()
-        env.pre_snappyhex()
-
-        env.snappyhexmesh()
-        env.read_surfaces()
-        env.read_faces()
-        env.read_points()
-        env.find_walls()
-        env.pick_boundaries()
-        env.set_boundary_conditions()
-        env.run_cfd()
+        # env.run_cfd()
+        env.export_csv()
 
 
         
