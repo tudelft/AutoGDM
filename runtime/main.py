@@ -266,7 +266,7 @@ class environment:
                 k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
             elif patch.type == 'inlet':
-                U['boundaryField'][patch.id] = {'type': 'fixedValue', 'value': 'uniform (0 10 0)'}           
+                U['boundaryField'][patch.id] = {'type': 'fixedValue', 'value': 'uniform (0 3 0)'}           
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.00375'}
@@ -284,7 +284,7 @@ class environment:
 
     def export_csv(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
-        # os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
+        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
 
         f = open(self.cfd_folder+'/0/C')
         self.points_file = f.readlines()    
@@ -348,24 +348,24 @@ if __name__=="__main__":
     if not os.path.exists(os.path.abspath(env_pics_folder_inversed)):
         os.system('mkdir ' + env_pics_folder_inversed)
 
-    # for i,env in enumerate(environments):
-    #     if i%size!=rank: continue
-    #     env.invert_img()
-    #     env.create_cfd_folder()
-    #     env.extrude_imgs()
-    #     env.find_largest_space()
-    #     env.pre_snappyhex()
-    #     env.snappyhexmesh()
-    #     env.read_surfaces()
-    #     env.read_faces()
-    #     env.read_points()
-    #     env.find_walls()
-    #     env.pick_boundaries()
-    #     env.set_boundary_conditions()
+    for i,env in enumerate(environments):
+        if i%size!=rank: continue
+        env.invert_img()
+        env.create_cfd_folder()
+        env.extrude_imgs()
+        env.find_largest_space()
+        env.pre_snappyhex()
+        env.snappyhexmesh()
+        env.read_surfaces()
+        env.read_faces()
+        env.read_points()
+        env.find_walls()
+        env.pick_boundaries()
+        env.set_boundary_conditions()
     
     for i,env in enumerate(environments):
         if i%size!=rank: continue
-        # env.run_cfd()
+        env.run_cfd()
         env.export_csv()
 
 
