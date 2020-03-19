@@ -329,7 +329,7 @@ class environment:
         for timestep in self.flow_fields:
             data = {'U:0': timestep.Ux, 'U:1':timestep.Uy,'U:2':  timestep.Uz,'Points:0':self.points_x,'Points:1':self.points_y,'Points:2':self.points_z}
             df = pd.DataFrame(data, columns= ['U:0','U:1','U:2','Points:0','Points:1','Points:2'])
-            df.to_csv(timestep.id+'.csv',index=False,header=True)
+            df.to_csv(self.cfd_folder+'/csv/' + timestep.id+'.csv',index=False,header=True)
             
 
 
