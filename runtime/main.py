@@ -284,7 +284,7 @@ class environment:
 
     def export_csv(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
-        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
+        # os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
 
         f = open(self.cfd_folder+'/0/C')
         self.points_file = f.readlines()    
@@ -302,35 +302,32 @@ class environment:
                 self.points_y.append(float(line[1]))
                 self.points_z.append(float(line[2]))
         
-        self.flow_fields = []
+        last_step = np.max([float(step.split('/')[-1]) for step in glob.glob(self.cfd_folder+"/0.*") ])     
+               
+        timestep = flow_field(last_step)
+        f = open(self.cfd_folder+"/"+timestep+'/U')
+        flow_data = f.readlines()    
+        Ux = []
+        Uy = []
+        Uz = []
 
-        for folder in glob.glob(self.cfd_folder+"/0.*"):
-
-            timestep = flow_field(folder.split('/')[-1])
-            f = open(folder+'/U')
-            flow_data = f.readlines()    
-            Ux = []
-            Uy = []
-            Uz = []
-
-            for i,line in enumerate(flow_data):
-                if i >=22:
-                    if line.find(")") == 0:
-                        break
-                    
-                    line = line.replace("("," ").replace(")"," ").split()
-                    Ux.append(float(line[0]))
-                    Uy.append(float(line[1]))
-                    Uz.append(float(line[2]))
-            
-            timestep.Ux, timestep.Uy, timestep.Uz = Ux, Uy, Uz
-            self.flow_fields.append(timestep)
+        for i,line in enumerate(flow_data):
+            if i >=22:
+                if line.find(")") == 0:
+                    break
+                
+                line = line.replace("("," ").replace(")"," ").split()
+                Ux.append(float(line[0]))
+                Uy.append(float(line[1]))
+                Uz.append(float(line[2]))
         
-        for timestep in self.flow_fields:
-            data = {'U:0': timestep.Ux, 'U:1':timestep.Uy,'U:2':  timestep.Uz,'Points:0':self.points_x,'Points:1':self.points_y,'Points:2':self.points_z}
-            df = pd.DataFrame(data, columns= ['U:0','U:1','U:2','Points:0','Points:1','Points:2'])
-            df.to_csv(self.cfd_folder+'/csv/' + timestep.id+'.csv',index=False,header=True)
+        timestep.Ux, timestep.Uy, timestep.Uz = Ux, Uy, Uz
+
+        data = {'U:0': timestep.Ux, 'U:1':timestep.Uy,'U:2':  timestep.Uz,'Points:0':self.points_x,'Points:1':self.points_y,'Points:2':self.points_z}
+        df = pd.DataFrame(data, columns= ['U:0','U:1','U:2','Points:0','Points:1','Points:2'])
+        df.to_csv(self.cfd_folder+'/ROS/' +'_0.csv',index=False,header=True)
             
+
 
 
 if __name__=="__main__":
