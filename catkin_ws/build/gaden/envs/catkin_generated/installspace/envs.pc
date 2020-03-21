@@ -1,0 +1,8 @@
+prefix=/home/bart/CFD_pipeline/catkin_ws/install
+
+Name: envs
+Description: Description of envs
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

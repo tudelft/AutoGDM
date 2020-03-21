@@ -20,3 +20,6 @@ inside_input_folder = "../pics/white_space/"
 inside_output_folder = "../CAD_files/inside/"
 
 java_loc = "../java/Extrude.jar"
+
+gaden_env_dir = "../catkin_ws/src/gaden/envs"
+empty_ros_dir = "../environments/ROS/empty_project"

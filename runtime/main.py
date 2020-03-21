@@ -282,9 +282,18 @@ class environment:
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
         os.system('cd '+ os.path.abspath(self.cfd_folder) +' && pimpleFoam')
 
-    def export_csv(self):
+    def make_ros_folder(self):
+        self.ros_loc = os.path.abspath(gaden_env_dir) + '/' + self.id
+        if not os.path.exists(self.ros_loc):
+            command = 'cp -r ' + os.path.abspath(empty_ros_dir) + ' ' + self.ros_loc
+            os.system(command)
+        else:
+            command = 'rm -rf ' + self.ros_loc + ' && cp -r ' + os.path.abspath(empty_ros_dir) + ' ' + self.ros_loc
+            os.system(command)       
+         
+    def prep_ros(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
-        # os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
+        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
 
         f = open(self.cfd_folder+'/0/C')
         self.points_file = f.readlines()    
@@ -305,7 +314,7 @@ class environment:
         last_step = np.max([float(step.split('/')[-1]) for step in glob.glob(self.cfd_folder+"/0.*") ])     
                
         timestep = flow_field(last_step)
-        f = open(self.cfd_folder+"/"+timestep+'/U')
+        f = open(self.cfd_folder+"/"+str(last_step)+'/U')
         flow_data = f.readlines()    
         Ux = []
         Uy = []
@@ -325,10 +334,35 @@ class environment:
 
         data = {'U:0': timestep.Ux, 'U:1':timestep.Uy,'U:2':  timestep.Uz,'Points:0':self.points_x,'Points:1':self.points_y,'Points:2':self.points_z}
         df = pd.DataFrame(data, columns= ['U:0','U:1','U:2','Points:0','Points:1','Points:2'])
-        df.to_csv(self.cfd_folder+'/ROS/' +'_0.csv',index=False,header=True)
-            
+        df.to_csv(self.ros_loc+'/wind_simulations/' +'_0.csv',index=False,header=True)
+    
+        ## move cad file to ROS
+        self.env_cad_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_env.stl'
+        self.ros_cad_loc = self.ros_loc+'/cad_models/walls.stl'
+        command = 'cp  '+self.env_cad_loc+' '+ self.ros_cad_loc
+        os.system(command)
 
+        command = 'cd ' + self.ros_loc+'/cad_models && meshlabserver -i walls.stl -o walls.dae '
+        os.system(command)
 
+        ## edit launch files
+        self.ros_launch_folder = self.ros_loc + '/launch/'
+        f = open(self.ros_launch_folder+'preprocessing.launch')
+        lines = f.readlines()
+        lines[5] = '    <arg name="scenario" default="'+self.id+ '"/>'
+        f = open(self.ros_launch_folder+'preprocessing.launch',"w")
+        f.writelines(lines)
+        f.close()
+
+        f = open(self.ros_launch_folder+'gas_simulator.launch')
+        lines = f.readlines()
+        lines[6] = '    <arg name="scenario" default="'+self.id+ '"/>'
+        f = open(self.ros_launch_folder+'gas_simulator.launch',"w")
+        f.writelines(lines)
+        f.close()
+
+    def run_ros(self):
+        os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch && roslaunch gas_simulator.launch')
 
 if __name__=="__main__":
     # #find out which number processor this particular instance is,
@@ -347,23 +381,25 @@ if __name__=="__main__":
 
     for i,env in enumerate(environments):
         if i%size!=rank: continue
-        env.invert_img()
-        env.create_cfd_folder()
-        env.extrude_imgs()
-        env.find_largest_space()
-        env.pre_snappyhex()
-        env.snappyhexmesh()
-        env.read_surfaces()
-        env.read_faces()
-        env.read_points()
-        env.find_walls()
-        env.pick_boundaries()
-        env.set_boundary_conditions()
+        
+        # env.invert_img()
+        # env.create_cfd_folder()
+        # env.extrude_imgs()
+        # env.find_largest_space()
+        # env.pre_snappyhex()
+        # env.snappyhexmesh()
+        # env.read_surfaces()
+        # env.read_faces()
+        # env.read_points()
+        # env.find_walls()
+        # env.pick_boundaries()
+        # env.set_boundary_conditions()
     
-    for i,env in enumerate(environments):
-        if i%size!=rank: continue
-        env.run_cfd()
-        env.export_csv()
-
+    # for i,env in enumerate(environments):
+    #     if i%size!=rank: continue
+        # env.run_cfd()
+        env.make_ros_folder()
+        env.prep_ros()
+        env.run_ros()
 
         

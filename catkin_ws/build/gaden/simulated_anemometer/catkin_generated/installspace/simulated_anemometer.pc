@@ -1,0 +1,8 @@
+prefix=/home/bart/CFD_pipeline/catkin_ws/install
+
+Name: simulated_anemometer
+Description: Description of simulated_anemometer
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp visualization_msgs std_msgs nav_msgs olfaction_msgs tf
