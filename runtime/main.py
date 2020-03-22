@@ -382,22 +382,22 @@ if __name__=="__main__":
     for i,env in enumerate(environments):
         if i%size!=rank: continue
         
-        # env.invert_img()
-        # env.create_cfd_folder()
-        # env.extrude_imgs()
-        # env.find_largest_space()
-        # env.pre_snappyhex()
-        # env.snappyhexmesh()
-        # env.read_surfaces()
-        # env.read_faces()
-        # env.read_points()
-        # env.find_walls()
-        # env.pick_boundaries()
-        # env.set_boundary_conditions()
+        env.invert_img()
+        env.create_cfd_folder()
+        env.extrude_imgs()
+        env.find_largest_space()
+        env.pre_snappyhex()
+        env.snappyhexmesh()
+        env.read_surfaces()
+        env.read_faces()
+        env.read_points()
+        env.find_walls()
+        env.pick_boundaries()
+        env.set_boundary_conditions()
     
     # for i,env in enumerate(environments):
     #     if i%size!=rank: continue
-        # env.run_cfd()
+        env.run_cfd()
         env.make_ros_folder()
         env.prep_ros()
         env.run_ros()
