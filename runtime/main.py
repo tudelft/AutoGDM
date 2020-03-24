@@ -91,6 +91,87 @@ class environment:
             elif i>max_it:
                 self.empty_point = (size_x/2,size_y/2)
                 found_empty_point = True
+    
+    def place_source(self):
+        for patch in self.patches:
+            if patch.id == self.inlet:
+                start_face = patch.start
+
+        f = open(self.boundary_folder+'points')
+        lines = f.readlines()
+        f.close()
+
+        for i, line in enumerate(lines):
+            if line.find("(") == 0:
+                start_line=i 
+                break
+
+        face = self.faces[start_face+1]
+      
+        line = lines[start_line+face[0]]
+        point_on_surf = line.replace("("," ").replace(")"," ").split()
+        x, y = float(point_on_surf[0]), float(point_on_surf[1])  
+
+        x_mid = size_x/2.
+        y_mid = size_y/2.   
+        im_x_mid = int(self.img_shape[0]/2)
+        im_y_mid = int(self.img_shape[1]/2)
+
+        image = cv2.imread(self.img_inverted_location,cv2.IMREAD_GRAYSCALE)
+        original_img = cv2.imread(self.img_location)
+        if x<x_mid and y<y_mid:
+            image = image[im_x_mid:,:im_y_mid]
+            original_img = original_img[im_x_mid:,:im_y_mid]
+            self.source_pos = np.array([0.,0.])
+        elif x>=x_mid and y<y_mid:
+            image = image[im_x_mid:,im_y_mid:]
+            original_img = original_img[im_x_mid:,:im_y_mid]
+            self.source_pos = np.array([x_mid,0.])
+        elif x>=x_mid and y>=y_mid:
+            image = image[:im_x_mid,im_y_mid:]
+            original_img = original_img[im_x_mid:,:im_y_mid]
+            self.source_pos = np.array([x_mid,y_mid])
+        elif x<x_mid and y>y_mid:
+            image = image[:im_x_mid,:im_y_mid]
+            original_img = original_img[im_x_mid:,:im_y_mid]
+            self.source_pos = np.array([0.,y_mid])
+        
+        # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        gray = image
+        thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)[1]
+        cnts = cv2.findContours(thresh, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        num_cnts = np.shape(cnts)[0]
+        out = np.zeros_like(original_img)
+        areas = np.array([])
+        # loop over the contours
+        for c in cnts:
+            areas = np.append(areas,cv2.contourArea(c))
+
+        cv2.drawContours(out, [cnts[np.argmax(areas)]], -1, (0, 255, 0), 1)
+        cnts = np.delete(cnts,np.argmax(areas))
+
+        if num_cnts>1:
+            for c in cnts:
+                cv2.drawContours(out, [c], -1, (0, 255, 0), -1)
+
+        out  = out + original_img
+        out = np.array(cv2.threshold(cv2.cvtColor(out, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY)[1])
+
+        found_empty_point = False 
+        while found_empty_point == False:
+            x, y = random.randint(0,self.img_shape[0]/2), random.randint(0,self.img_shape[1]/2)
+            x_min, x_max, y_min, y_max = x-point_clearance, x+point_clearance, y-point_clearance, y+ point_clearance
+
+            if (np.count_nonzero(out[y_min:y_max,x_min:x_max])== 0 and x_min>0 and y_min >0 and x_max < self.img_shape[0]/2 and y_max < self.img_shape[1]/2 ):
+                print(x,y)
+                self.source_pos += np.array([x*(size_x/self.img_shape[1]),(size_y/2-y*(size_y/self.img_shape[0]))])
+                found_empty_point = True
+
+            elif i>max_it:
+                self.source_pos = (size_x/2,size_y/2)
+                found_empty_point = True
+
         
 
     def pre_snappyhex(self):
@@ -345,18 +426,31 @@ class environment:
         command = 'cd ' + self.ros_loc+'/cad_models && meshlabserver -i walls.stl -o walls.dae '
         os.system(command)
 
+        # get new empty point for source
+        self.find_largest_space()
+
         ## edit launch files
         self.ros_launch_folder = self.ros_loc + '/launch/'
         f = open(self.ros_launch_folder+'preprocessing.launch')
         lines = f.readlines()
         lines[5] = '    <arg name="scenario" default="'+self.id+ '"/>'
+
+        lines[20] ='        <param name="empty_point_x" value="'+str(self.source_pos[0])+'"/>      ### (m)'
+        lines[21] ='        <param name="empty_point_y" value="'+str(self.source_pos[1])+'"/>      ### (m)'
+        lines[22] ='        <param name="empty_point_z" value="'+str(source_height)+'"/>      ### (m)'
+
         f = open(self.ros_launch_folder+'preprocessing.launch',"w")
         f.writelines(lines)
         f.close()
 
         f = open(self.ros_launch_folder+'gas_simulator.launch')
+
         lines = f.readlines()
         lines[6] = '    <arg name="scenario" default="'+self.id+ '"/>'
+        lines[37] ='        <param name="source_position_x" value="'+str(self.source_pos[0])+'"/>      ### (m)'
+        lines[38] ='        <param name="source_position_y" value="'+str(self.source_pos[1])+'"/>      ### (m)'
+        lines[39] ='        <param name="source_position_z" value="'+str(source_height)+'"/>      ### (m)'
+
         f = open(self.ros_launch_folder+'gas_simulator.launch',"w")
         f.writelines(lines)
         f.close()
@@ -381,7 +475,6 @@ if __name__=="__main__":
 
     for i,env in enumerate(environments):
         if i%size!=rank: continue
-        
         env.invert_img()
         env.create_cfd_folder()
         env.extrude_imgs()
@@ -393,10 +486,11 @@ if __name__=="__main__":
         env.read_points()
         env.find_walls()
         env.pick_boundaries()
+        env.place_source()
         env.set_boundary_conditions()
     
-    # for i,env in enumerate(environments):
-    #     if i%size!=rank: continue
+    for i,env in enumerate(environments):
+        if i%size!=rank: continue
         env.run_cfd()
         env.make_ros_folder()
         env.prep_ros()

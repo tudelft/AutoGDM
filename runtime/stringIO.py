@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D #<-- Note the capitalization! 
 
-f = open('iteration_5.txt')
+f = open('iteration_9.txt')
 lines = f.readlines()
 
 
@@ -12,7 +12,7 @@ gas_conc = []
 for i, line in enumerate(lines):
     if i >= 7:
         reads = line.replace('\n','').split(' ')
-        if float(reads[2]) > 2 and float(reads[2]) <4 :
+        if float(reads[2])== 0 :
             coords_x.append(float(reads[0]))
             coords_y.append(float(reads[1]))
             coords_z.append(float(reads[2]))

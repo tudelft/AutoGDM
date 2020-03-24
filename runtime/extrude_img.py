@@ -27,7 +27,7 @@ def extrude_imgs(extrude_inside):
         
         # execute command
         command = "java -jar "+java_loc+" -input_file "+ input_path + " -output_file "+ output_path + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
-        os.system(command)
+        os.command)
         print(i)
         i+=1
     # os.system('rm -rf test')

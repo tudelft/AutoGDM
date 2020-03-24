@@ -21,5 +21,6 @@ inside_output_folder = "../CAD_files/inside/"
 
 java_loc = "../java/Extrude.jar"
 
-gaden_env_dir = "../catkin_ws/src/gaden/envs"
+gaden_env_dir = "../simulation_ws/src/gaden/envs"
 empty_ros_dir = "../environments/ROS/empty_project"
+source_height = 0.5
