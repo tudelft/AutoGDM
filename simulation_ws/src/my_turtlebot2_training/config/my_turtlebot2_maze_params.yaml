@@ -1,8 +1,9 @@
 turtlebot2: #namespace
-    task_and_robot_environment_name: 'MyTurtleBot2Wall-v0'
+    # task_and_robot_environment_name: 'MyTurtleBot2Wall-v0'
+    task_and_robot_environment_name: 'ParrotDroneGoto-v0'
     ros_ws_abspath: "/home/bart/CFD_pipeline/simulation_ws"
-    running_step: 0.04 # amount of time the control will be executed
-    pos_step: 0.016     # increment in position for each command
+    running_step: 0.1 # amount of time the control will be executed
+    pos_step: 0.5     # increment in position for each command
     
     #qlearn parameters
     alpha: 0.1

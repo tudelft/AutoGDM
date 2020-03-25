@@ -10,6 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import pandas as pd
+from multiprocessing import Pool
+
 
 class patch:
     def __init__(self, id, start_face, nfaces ):
@@ -26,8 +28,10 @@ class environment:
     def __init__(self,img_location):
         self.img_location = img_location
         self.id = img_location.split(".")[0].split('/')[-1]
+        
 
     def invert_img(self):
+        print('Started env:'+str(self.id))
         self.img = imageio.imread(self.img_location)
         self.img_shape = np.shape(self.img)
         self.img_inverted = -(self.img-255)
@@ -46,12 +50,12 @@ class environment:
 
         # generate cad of environment for sim
         self.env_cat_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_env.stl'
-        command = "java -jar "+java_loc+" -input_file "+ self.img_location + " -output_file "+ self.env_cat_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
+        command = "java -jar "+java_loc+" -input_file "+ self.img_location + " -output_file "+ self.env_cat_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) +' > /dev/null'
         os.system(command)
 
         # generate cad of inside environment for cfd
         self.env_flow_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_flow_vol.stl'
-        command = "java -jar "+java_loc+" -input_file "+ self.img_inverted_location + " -output_file "+ self.env_flow_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) 
+        command = "java -jar "+java_loc+" -input_file "+ self.img_inverted_location + " -output_file "+ self.env_flow_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) + ' > /dev/null'
         os.system(command)
 
 
@@ -79,6 +83,7 @@ class environment:
         out  = out + cv2.imread(self.img_location)
         out = np.array(cv2.threshold(cv2.cvtColor(out, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY)[1])
 
+        i=0
         found_empty_point = False 
         while found_empty_point == False:
             x, y = random.randint(0,self.img_shape[0]), random.randint(0,self.img_shape[1])
@@ -91,6 +96,8 @@ class environment:
             elif i>max_it:
                 self.empty_point = (size_x/2,size_y/2)
                 found_empty_point = True
+            i+=1
+                
     
     def place_source(self):
         for patch in self.patches:
@@ -158,19 +165,21 @@ class environment:
         out  = out + original_img
         out = np.array(cv2.threshold(cv2.cvtColor(out, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY)[1])
 
+        i=0
         found_empty_point = False 
         while found_empty_point == False:
             x, y = random.randint(0,self.img_shape[0]/2), random.randint(0,self.img_shape[1]/2)
             x_min, x_max, y_min, y_max = x-point_clearance, x+point_clearance, y-point_clearance, y+ point_clearance
 
             if (np.count_nonzero(out[y_min:y_max,x_min:x_max])== 0 and x_min>0 and y_min >0 and x_max < self.img_shape[0]/2 and y_max < self.img_shape[1]/2 ):
-                print(x,y)
+                
                 self.source_pos += np.array([x*(size_x/self.img_shape[1]),(size_y/2-y*(size_y/self.img_shape[0]))])
                 found_empty_point = True
 
             elif i>max_it:
                 self.source_pos = (size_x/2,size_y/2)
-                found_empty_point = True
+                found_empty_point = True    
+            i+=1
 
         
 
@@ -184,7 +193,7 @@ class environment:
         f.writeFile()
         
         # run surface feature extract
-        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && surfaceFeatureExtract')
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && surfaceFeatureExtract'+' > /dev/null')
     
         self.feature_files = []
         for file in glob.glob(os.path.abspath(self.cfd_folder)+"/constant/triSurface/**.eMesh"):
@@ -207,7 +216,8 @@ class environment:
         f.writeFile()
     
     def snappyhexmesh(self):
-        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && snappyHexMesh -overwrite && autoPatch -overwrite ' + str(autopatch_angle))
+        print(str(self.id)+' started meshing')
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh > /dev/null && surfaceFeatureExtract > /dev/null && snappyHexMesh -overwrite > /dev/null && autoPatch -overwrite ' + str(autopatch_angle)+' > /dev/null')
         
     def read_surfaces(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
@@ -309,9 +319,15 @@ class environment:
         
         sort_arr = np.array(patches,dtype=dtype)
         sorted_arr = np.sort(sort_arr,order=['delta_z','nfaces'])
-        sorted_arr = sorted_arr[-top_surfaces::]
         
-        idxs = random.sample(range(0, top_surfaces  ), 2)
+        print(np.shape(sorted_arr))
+        if len(patches)>=top_surfaces:
+            sorted_arr = sorted_arr[-top_surfaces:]
+            idxs = random.sample(range(0, top_surfaces  ), 2)
+        else:
+            idxs = random.sample(range(0, len(patches)  ), 2) 
+        
+        print(np.shape(sorted_arr))
         self.inlet, self.outlet = sorted_arr[idxs[0]][0], sorted_arr[idxs[1]][0]
 
         for patch in self.patches:
@@ -347,7 +363,7 @@ class environment:
                 k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
             elif patch.type == 'inlet':
-                U['boundaryField'][patch.id] = {'type': 'fixedValue', 'value': 'uniform (0 3 0)'}           
+                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform 3 '}           
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.00375'}
@@ -360,8 +376,9 @@ class environment:
         eps.writeFile()
     
     def run_cfd(self):
+        print(str(self.id)+' started cfd')
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
-        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && pimpleFoam')
+        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && pimpleFoam > /dev/null')
 
     def make_ros_folder(self):
         self.ros_loc = os.path.abspath(gaden_env_dir) + '/' + self.id
@@ -374,7 +391,7 @@ class environment:
          
     def prep_ros(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
-        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" && postProcess -func "writeCellCentres"  ')
+        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" > /dev/null && postProcess -func "writeCellCentres"  '+' > /dev/null')
 
         f = open(self.cfd_folder+'/0/C')
         self.points_file = f.readlines()    
@@ -421,13 +438,13 @@ class environment:
         self.env_cad_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_env.stl'
         self.ros_cad_loc = self.ros_loc+'/cad_models/walls.stl'
         command = 'cp  '+self.env_cad_loc+' '+ self.ros_cad_loc
-        os.system(command)
+        os.system(command+' > /dev/null')
 
-        command = 'cd ' + self.ros_loc+'/cad_models && meshlabserver -i walls.stl -o walls.dae '
-        os.system(command)
+        command = 'cd ' + self.ros_loc+'/cad_models && meshlabserver -i walls.stl -o walls.dae > /dev/null  '
+        os.system(command+' > /dev/null')
 
         # get new empty point for source
-        self.find_largest_space()
+        self.place_source()
 
         ## edit launch files
         self.ros_launch_folder = self.ros_loc + '/launch/'
@@ -456,7 +473,28 @@ class environment:
         f.close()
 
     def run_ros(self):
-        os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch && roslaunch gas_simulator.launch')
+        print(str(self.id)+' started filament simulator')
+        os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch > /dev/null && roslaunch gas_simulator.launch'+' > /dev/null')
+
+def run(env):
+    env.invert_img()
+    env.create_cfd_folder()
+    env.extrude_imgs()
+    env.find_largest_space()
+    env.pre_snappyhex()
+    env.snappyhexmesh()
+    env.read_surfaces()
+    env.read_faces()
+    env.read_points()
+    env.find_walls()
+    env.pick_boundaries()
+    env.place_source()
+    env.set_boundary_conditions()      
+    env.run_cfd()
+    env.make_ros_folder()
+    env.prep_ros()
+    env.run_ros()
+    print(str(env.id)+' finished')
 
 if __name__=="__main__":
     # #find out which number processor this particular instance is,
@@ -473,27 +511,9 @@ if __name__=="__main__":
     if not os.path.exists(os.path.abspath(env_pics_folder_inversed)):
         os.system('mkdir ' + env_pics_folder_inversed)
 
-    for i,env in enumerate(environments):
-        if i%size!=rank: continue
-        env.invert_img()
-        env.create_cfd_folder()
-        env.extrude_imgs()
-        env.find_largest_space()
-        env.pre_snappyhex()
-        env.snappyhexmesh()
-        env.read_surfaces()
-        env.read_faces()
-        env.read_points()
-        env.find_walls()
-        env.pick_boundaries()
-        env.place_source()
-        env.set_boundary_conditions()
-    
-    for i,env in enumerate(environments):
-        if i%size!=rank: continue
-        env.run_cfd()
-        env.make_ros_folder()
-        env.prep_ros()
-        env.run_ros()
+    pool = Pool()
+    pool.map(run,environments)
+
+
 
         

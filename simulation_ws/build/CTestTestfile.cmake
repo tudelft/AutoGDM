@@ -1,0 +1,35 @@
+# CMake generated Testfile for 
+# Source directory: /home/bart/CFD_pipeline/simulation_ws/src
+# Build directory: /home/bart/CFD_pipeline/simulation_ws/build
+# 
+# This file includes the relevant testing commands required for 
+# testing this directory and lists subdirectories to be tested as well.
+subdirs("gtest")
+subdirs("turtlebot/turtlebot_create/create_description")
+subdirs("turtlebot/turtlebot_create/create_driver")
+subdirs("gaden/envs")
+subdirs("my_turtlebot2_training")
+subdirs("olfaction_msgs")
+subdirs("turtlebot/turtlebot")
+subdirs("turtlebot/turtlebot_bringup")
+subdirs("turtlebot/turtlebot_create/turtlebot_create")
+subdirs("turtlebot/turtlebot_gazebo")
+subdirs("turtlebot/turtlebot_navigation_gazebo")
+subdirs("turtlebot/turtlebot_project")
+subdirs("turtlebot/turtlebot_rtab")
+subdirs("turtlebot/turtlebot_rviz_launchers")
+subdirs("gaden/gaden_filament_simulator")
+subdirs("gaden/gaden_preprocessing")
+subdirs("turtlebot/multiple_kobukis")
+subdirs("openai_ros/openai_ros")
+subdirs("turtlebot/follow_line_tc_pkg")
+subdirs("turtlebot/turtlebot_create/create_node")
+subdirs("gaden/gaden_environment")
+subdirs("gaden/gaden_player")
+subdirs("gaden/simulated_anemometer")
+subdirs("gaden/simulated_gas_sensor")
+subdirs("gaden/simulated_gas_sensor_array")
+subdirs("turtlebot/turtlebot_navigation")
+subdirs("turtlebot/turtlebot_teleop")
+subdirs("turtlebot/kobuki_description")
+subdirs("turtlebot/turtlebot_description")

@@ -7,7 +7,7 @@ height = 2
 point_clearance = 5
 max_it = 500
 
-autopatch_angle = 10
+autopatch_angle = 80
 top_surfaces = 10
 
 env_pics_folder = "../environments/pics/white_walls"

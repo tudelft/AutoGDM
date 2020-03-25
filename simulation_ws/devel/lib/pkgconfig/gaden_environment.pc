@@ -1,0 +1,8 @@
+prefix=/home/bart/CFD_pipeline/simulation_ws/devel
+
+Name: gaden_environment
+Description: Description of gaden_environment
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp visualization_msgs tf

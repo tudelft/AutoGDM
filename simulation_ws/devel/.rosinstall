@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/bart/CFD_pipeline/simulation_ws/devel/setup.sh

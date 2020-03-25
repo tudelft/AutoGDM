@@ -16,6 +16,7 @@ if __name__ == '__main__':
     rospy.init_node('example_turtlebot2_maze_qlearn',
                     anonymous=True, log_level=rospy.WARN)
 
+
     # Init OpenAI_ROS ENV
     task_and_robot_environment_name = rospy.get_param(
         '/turtlebot2/task_and_robot_environment_name')

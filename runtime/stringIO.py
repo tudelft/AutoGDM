@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D #<-- Note the capitalization! 
 
-f = open('iteration_9.txt')
+f = open('iteration_51.txt')
 lines = f.readlines()
 
 

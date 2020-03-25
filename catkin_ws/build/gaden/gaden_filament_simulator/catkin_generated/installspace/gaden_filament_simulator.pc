@@ -1,8 +1,0 @@
-prefix=/home/bart/CFD_pipeline/catkin_ws/install
-
-Name: gaden_filament_simulator
-Description: Description of gaden_filament_simulator
-Version: 1.0.0
-Cflags: -I/usr/include
-Libs: -L${prefix}/lib /usr/include/lib/libboost_iostreams.so /usr/include/lib/libboost_regex.so
-Requires: roscpp visualization_msgs std_msgs nav_msgs
