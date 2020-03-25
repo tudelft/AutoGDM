@@ -16,7 +16,7 @@ FoamFile
 
 // Which of the steps to run
 castellatedMesh true;
-snap            false;
+snap            true;
 addLayers       false;
 
 
