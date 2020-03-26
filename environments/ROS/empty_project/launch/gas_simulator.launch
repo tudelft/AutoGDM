@@ -11,11 +11,11 @@
     <node pkg="gaden_filament_simulator" type="filament_simulator" name="filament_simulator" output="screen" required="true">
         <param name="verbose" value="false" />
         <param name="wait_preprocessing" value="false"/>    	 ### wait for the ok from preprocessing before starting the simulation
-	    <param name="sim_time" value="100" />                    ### [sec] Total time of the gas dispersion simulation
-	    <param name="time_step" value="1.0" />                   ### [sec] Time increment between snapshots. Set aprox = cell_size/max_wind_speed.
-	    <param name="num_filaments_sec" value="10" />            ### Num of filaments released each second
+	    <param name="sim_time" value="70" />                    ### [sec] Total time of the gas dispersion simulation
+	    <param name="time_step" value="0.1" />                   ### [sec] Time increment between snapshots. Set aprox = cell_size/max_wind_speed.
+	    <param name="num_filaments_sec" value="100" />            ### Num of filaments released each second
 	    <param name="variable_rate" value="true" />              ### If true the number of released filaments would be random(0,numFilaments_sec)
-        <param name="ppm_filament_center" value="10"/>           ### [ppm] Gas concentration at the center of the 3D gaussian (filament)
+        <param name="ppm_filament_center" value="100"/>           ### [ppm] Gas concentration at the center of the 3D gaussian (filament)
         <param name="filament_initial_std" value="10"/>          ### [cm] Sigma of the filament at t=0-> 3DGaussian shape
         <param name="filament_growth_gamma" value="10"/>         ### [cm²/s] Growth ratio of the filament_std
         <param name="filament_noise_std" value="0.02"/>          ### [m] Range of the white noise added on each iteration

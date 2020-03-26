@@ -440,7 +440,7 @@ class environment:
         command = 'cp  '+self.env_cad_loc+' '+ self.ros_cad_loc
         os.system(command+' > /dev/null')
 
-        command = 'cd ' + self.ros_loc+'/cad_models && meshlabserver -i walls.stl -o walls.dae > /dev/null  '
+        command = 'cd ' + self.ros_loc+'/cad_models > /dev/null && meshlabserver -i walls.stl -o walls.dae > /dev/null  '
         os.system(command+' > /dev/null')
 
         # get new empty point for source
@@ -474,27 +474,37 @@ class environment:
 
     def run_ros(self):
         print(str(self.id)+' started filament simulator')
-        os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch > /dev/null && roslaunch gas_simulator.launch'+' > /dev/null')
+        os.system('cd '+self.ros_launch_folder+' > /dev/null && roslaunch preprocessing.launch > /dev/null && roslaunch gas_simulator.launch > /dev/null')
 
 def run(env):
-    env.invert_img()
-    env.create_cfd_folder()
-    env.extrude_imgs()
-    env.find_largest_space()
-    env.pre_snappyhex()
-    env.snappyhexmesh()
-    env.read_surfaces()
-    env.read_faces()
-    env.read_points()
-    env.find_walls()
-    env.pick_boundaries()
-    env.place_source()
-    env.set_boundary_conditions()      
-    env.run_cfd()
-    env.make_ros_folder()
-    env.prep_ros()
-    env.run_ros()
-    print(str(env.id)+' finished')
+    tries = 0
+    done = False
+
+    while not done and tries < max_num_tries:
+        try:
+            env.invert_img()
+            env.create_cfd_folder()
+            env.extrude_imgs()
+            env.find_largest_space()
+            env.pre_snappyhex()
+            env.snappyhexmesh()
+            env.read_surfaces()
+            env.read_faces()
+            env.read_points()
+            env.find_walls()
+            env.pick_boundaries()
+            env.place_source()
+            env.set_boundary_conditions()      
+            env.run_cfd()
+            env.make_ros_folder()
+            env.prep_ros()
+            env.run_ros()
+            print(str(env.id)+' finished')
+            done = True
+        except:
+            print(env.id+' failed')
+            tries+=1
+
 
 if __name__=="__main__":
     # #find out which number processor this particular instance is,
