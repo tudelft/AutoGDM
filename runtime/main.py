@@ -98,7 +98,45 @@ class environment:
                 found_empty_point = True
             i+=1
                 
-    
+    def find_outlet(self):
+        for patch in self.patches:
+            if patch.id == self.outlet:
+                start_face = patch.start
+                no_faces = patch.nfaces
+
+        f = open(self.boundary_folder+'points')
+        lines = f.readlines()
+        f.close()
+
+        for i, line in enumerate(lines):
+            if line.find("(") == 0:
+                start_line=i+1 
+                break
+
+
+        x_min = y_min = np.inf
+        x_max = y_max = -np.inf
+
+        for face_no in range(start_face,(start_face+no_faces)):
+            face = self.faces[face_no]
+            for point in face:
+                line = lines[start_line+point]
+                
+                point_on_surf = line.replace("("," ").replace(")"," ").split()
+                x, y = float(point_on_surf[0]), float(point_on_surf[1])
+
+                if x>x_max:
+                    x_max = x
+                if x<x_min:
+                    x_min = x
+                if y>y_max:
+                    y_max = y
+                if y<y_min:
+                    y_min = y
+        
+        print("xmin, xmax : (%f,%f)"% (x_min,x_max))
+        print("ymin, ymax : (%f,%f)"% (y_min,y_max))
+
     def place_source(self):
         for patch in self.patches:
             if patch.id == self.inlet:
@@ -110,7 +148,7 @@ class environment:
 
         for i, line in enumerate(lines):
             if line.find("(") == 0:
-                start_line=i 
+                start_line=i+1 
                 break
 
         face = self.faces[start_face+1]
@@ -217,7 +255,7 @@ class environment:
     
     def snappyhexmesh(self):
         print(str(self.id)+' started meshing')
-        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh > /dev/null && surfaceFeatureExtract > /dev/null && snappyHexMesh -overwrite > /dev/null && autoPatch -overwrite ' + str(autopatch_angle)+' > /dev/null')
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && surfaceFeatureExtract && decomposePar && mpirun -np 8 snappyHexMesh -overwrite -parallel &&  reconstructParMesh -constant && autoPatch -overwrite ' + str(autopatch_angle) +' && mv 0.org 0')
         
     def read_surfaces(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
@@ -363,7 +401,7 @@ class environment:
                 k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
             elif patch.type == 'inlet':
-                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform 3 '}           
+                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform -3 '}           
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.00375'}
@@ -378,7 +416,7 @@ class environment:
     def run_cfd(self):
         print(str(self.id)+' started cfd')
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
-        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && pimpleFoam > /dev/null')
+        os.system('cd '+ os.path.abspath(self.cfd_folder) +'&& pimpleFoam')
 
     def make_ros_folder(self):
         self.ros_loc = os.path.abspath(gaden_env_dir) + '/' + self.id
@@ -388,12 +426,16 @@ class environment:
         else:
             command = 'rm -rf ' + self.ros_loc + ' && cp -r ' + os.path.abspath(empty_ros_dir) + ' ' + self.ros_loc
             os.system(command)       
-         
-    def prep_ros(self):
-        self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
-        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" > /dev/null && postProcess -func "writeCellCentres"  '+' > /dev/null')
 
-        f = open(self.cfd_folder+'/0/C')
+    def write_data(self):
+        self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
+        os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" -latestTime && postProcess -func "writeCellCentres" -latestTime ')
+
+    def prep_ros(self):
+
+        self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
+        last_step = np.max([float(step.split('/')[-1]) for step in glob.glob(self.cfd_folder+"/0.*") ])
+        f = open(self.cfd_folder+"/"+str(last_step)+'/C')
         self.points_file = f.readlines()    
         self.points_x = []
         self.points_y = []
@@ -409,7 +451,6 @@ class environment:
                 self.points_y.append(float(line[1]))
                 self.points_z.append(float(line[2]))
         
-        last_step = np.max([float(step.split('/')[-1]) for step in glob.glob(self.cfd_folder+"/0.*") ])     
                
         timestep = flow_field(last_step)
         f = open(self.cfd_folder+"/"+str(last_step)+'/U')
@@ -438,10 +479,10 @@ class environment:
         self.env_cad_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_env.stl'
         self.ros_cad_loc = self.ros_loc+'/cad_models/walls.stl'
         command = 'cp  '+self.env_cad_loc+' '+ self.ros_cad_loc
-        os.system(command+' > /dev/null')
+        os.system(command)
 
-        command = 'cd ' + self.ros_loc+'/cad_models > /dev/null && meshlabserver -i walls.stl -o walls.dae > /dev/null  '
-        os.system(command+' > /dev/null')
+        # command = 'cd ' + self.ros_loc+'/cad_models  && meshlabserver -i walls.stl -o walls.dae '
+        # os.system(command)
 
         # get new empty point for source
         self.place_source()
@@ -474,36 +515,23 @@ class environment:
 
     def run_ros(self):
         print(str(self.id)+' started filament simulator')
-        os.system('cd '+self.ros_launch_folder+' > /dev/null && roslaunch preprocessing.launch > /dev/null && roslaunch gas_simulator.launch > /dev/null')
+        os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch && roslaunch gas_simulator.launch ')
 
-def run(env):
+def run_ros_loop(env):
     tries = 0
     done = False
 
     while not done and tries < max_num_tries:
         try:
-            env.invert_img()
-            env.create_cfd_folder()
-            env.extrude_imgs()
-            env.find_largest_space()
-            env.pre_snappyhex()
-            env.snappyhexmesh()
-            env.read_surfaces()
-            env.read_faces()
-            env.read_points()
-            env.find_walls()
-            env.pick_boundaries()
-            env.place_source()
-            env.set_boundary_conditions()      
-            env.run_cfd()
             env.make_ros_folder()
             env.prep_ros()
             env.run_ros()
-            print(str(env.id)+' finished')
+            print(str(env.id)+' finished ros')
             done = True
         except:
             print(env.id+' failed')
             tries+=1
+
 
 
 if __name__=="__main__":
@@ -521,8 +549,38 @@ if __name__=="__main__":
     if not os.path.exists(os.path.abspath(env_pics_folder_inversed)):
         os.system('mkdir ' + env_pics_folder_inversed)
 
-    pool = Pool()
-    pool.map(run,environments)
+    for env in environments:
+        tries = 0
+        done = False
+        while not done and tries < max_num_tries:
+            try:
+                env.invert_img()
+                env.create_cfd_folder()
+                env.extrude_imgs()
+                env.find_largest_space()
+                env.pre_snappyhex()
+                env.snappyhexmesh()
+                env.read_surfaces()
+                env.read_faces()
+                env.read_points()
+                env.find_walls()
+                env.pick_boundaries()
+                env.place_source()
+                env.set_boundary_conditions()  
+                env.find_outlet()    
+                # env.run_cfd()
+                # env.write_data()
+                # env.make_ros_folder()
+                # env.prep_ros()
+                # env.run_ros()
+                print(str(env.id)+' finished cfd')
+                done = True
+            except:
+                print(env.id+' failed')
+                tries+=1
+    
+    # pool = Pool()
+    # pool.map(run_ros_loop,environments)
 
 
 

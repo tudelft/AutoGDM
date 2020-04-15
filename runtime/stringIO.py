@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D #<-- Note the capitalization! 
 
-f = open('iteration_51.txt')
+f = open('iteration_86.txt')
 lines = f.readlines()
 
 
@@ -22,6 +22,9 @@ for i, line in enumerate(lines):
 
 fig = plt.figure()
 ax = Axes3D(fig)
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
 slice = False
 
 if slice:
