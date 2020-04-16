@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import random
 import pandas as pd
 from multiprocessing import Pool
-
+from stl import mesh
 
 class patch:
     def __init__(self, id, start_face, nfaces ):
@@ -121,7 +121,6 @@ class environment:
             face = self.faces[face_no]
             for point in face:
                 line = lines[start_line+point]
-                
                 point_on_surf = line.replace("("," ").replace(")"," ").split()
                 x, y = float(point_on_surf[0]), float(point_on_surf[1])
 
@@ -134,8 +133,50 @@ class environment:
                 if y<y_min:
                     y_min = y
         
-        print("xmin, xmax : (%f,%f)"% (x_min,x_max))
-        print("ymin, ymax : (%f,%f)"% (y_min,y_max))
+        x_diff = np.abs(x_max-x_min)
+        y_diff = np.abs(y_max-y_min)
+
+        occ_grid = self.ros_loc+ '/OccupancyGrid3D.csv'
+        f = open(occ_grid)
+        lines = f.readlines()
+
+        cells = (lines[2].split(' ')[1::])
+        cells_x, cells_y, cells_z = int(cells[0]), int(cells[1]), int(cells[2])
+        cell_size = float(lines[3].split(' ')[-1])
+        start_line = 4
+
+        ## boundary in y-direction
+        if x_diff < y_diff:
+            x_line = int(x_min/size_x*cells_x)
+            y_line_min = int(y_min/size_y*cells_y)
+            y_line_max = int(y_max/size_y*cells_y)
+
+            x_lines = start_line+x_line+np.arange(cells_z)*(cells_x+1)
+            
+            for j in x_lines:
+                line = lines[j]
+                for i in np.arange(y_line_min,y_line_max+1):
+                    line = line[:i*2] + '2' + line[i*2+1:] 
+                
+                lines[j] = line
+
+        ## boundary in x-direction
+        else:
+            y_line = int(y_min/size_y*cells_y)
+            x_line_min = int(x_min/size_x*cells_x)
+            x_line_max = int(x_max/size_x*cells_x)
+            
+            first_line = x_line_min+start_line
+            first_last_line = x_line_max+start_line
+
+            x_lines = np.array([[np.arange(first_line+i*(cells_x+1),first_last_line+i*(cells_x+1))] for i in range(cells_z)]).flatten()    
+            
+            for j in x_lines:
+                lines[j] = lines[j][:y_line*2] + '2' + lines[j][y_line*2+1:]
+
+        f = open(occ_grid,"w")
+        f.writelines(lines)
+        f.close()
 
     def place_source(self):
         for patch in self.patches:
@@ -513,9 +554,11 @@ class environment:
         f.writelines(lines)
         f.close()
 
+    def run_preprocessing(self):
+        os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch')
     def run_ros(self):
         print(str(self.id)+' started filament simulator')
-        os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch && roslaunch gas_simulator.launch ')
+        os.system('cd '+self.ros_launch_folder+' && roslaunch gas_simulator.launch ')
 
 def run_ros_loop(env):
     tries = 0
@@ -553,31 +596,32 @@ if __name__=="__main__":
         tries = 0
         done = False
         while not done and tries < max_num_tries:
-            try:
-                env.invert_img()
-                env.create_cfd_folder()
-                env.extrude_imgs()
-                env.find_largest_space()
-                env.pre_snappyhex()
-                env.snappyhexmesh()
-                env.read_surfaces()
-                env.read_faces()
-                env.read_points()
-                env.find_walls()
-                env.pick_boundaries()
-                env.place_source()
-                env.set_boundary_conditions()  
-                env.find_outlet()    
-                # env.run_cfd()
-                # env.write_data()
-                # env.make_ros_folder()
-                # env.prep_ros()
-                # env.run_ros()
-                print(str(env.id)+' finished cfd')
-                done = True
-            except:
-                print(env.id+' failed')
-                tries+=1
+            # try:
+            env.invert_img()
+            env.create_cfd_folder()
+            env.extrude_imgs()
+            env.find_largest_space()
+            env.pre_snappyhex()
+            env.snappyhexmesh()
+            env.read_surfaces()
+            env.read_faces()
+            env.read_points()
+            env.find_walls()
+            env.pick_boundaries()
+            env.place_source()
+            env.set_boundary_conditions()  
+            env.run_cfd()
+            env.write_data()
+            env.make_ros_folder()
+            env.prep_ros()
+            env.run_preprocessing()
+            env.find_outlet() 
+            env.run_ros()
+            # print(str(env.id)+' finished cfd')
+            done = True
+            # except:
+            #     print(env.id+' failed')
+            #     tries+=1
     
     # pool = Pool()
     # pool.map(run_ros_loop,environments)

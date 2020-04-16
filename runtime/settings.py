@@ -26,3 +26,5 @@ empty_ros_dir = "../environments/ROS/empty_project"
 source_height = 0.5
 
 max_num_tries = 3
+z_min = 0
+z_max = height
