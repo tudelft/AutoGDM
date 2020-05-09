@@ -103,7 +103,6 @@ class environment:
             if patch.id == self.outlet:
                 start_face = patch.start
                 no_faces = patch.nfaces
-
         f = open(self.boundary_folder+'points')
         lines = f.readlines()
         f.close()
@@ -179,8 +178,9 @@ class environment:
         f.close()
 
     def place_source(self):
+        # self.source_pos = (size_x/2,size_y/2)
         for patch in self.patches:
-            if patch.id == self.inlet:
+            if patch.id == self.outlet:
                 start_face = patch.start
 
         f = open(self.boundary_folder+'points')
@@ -205,22 +205,6 @@ class environment:
 
         image = cv2.imread(self.img_inverted_location,cv2.IMREAD_GRAYSCALE)
         original_img = cv2.imread(self.img_location)
-        if x<x_mid and y<y_mid:
-            image = image[im_x_mid:,:im_y_mid]
-            original_img = original_img[im_x_mid:,:im_y_mid]
-            self.source_pos = np.array([0.,0.])
-        elif x>=x_mid and y<y_mid:
-            image = image[im_x_mid:,im_y_mid:]
-            original_img = original_img[im_x_mid:,:im_y_mid]
-            self.source_pos = np.array([x_mid,0.])
-        elif x>=x_mid and y>=y_mid:
-            image = image[:im_x_mid,im_y_mid:]
-            original_img = original_img[im_x_mid:,:im_y_mid]
-            self.source_pos = np.array([x_mid,y_mid])
-        elif x<x_mid and y>y_mid:
-            image = image[:im_x_mid,:im_y_mid]
-            original_img = original_img[im_x_mid:,:im_y_mid]
-            self.source_pos = np.array([0.,y_mid])
         
         # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray = image
@@ -244,6 +228,19 @@ class environment:
         out  = out + original_img
         out = np.array(cv2.threshold(cv2.cvtColor(out, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY)[1])
 
+        if x>=x_mid and y>=y_mid:
+            out = out[im_x_mid:,:im_y_mid]
+            self.source_pos = np.array([0.,0.])
+        elif x<x_mid and y>=y_mid:
+            out = out[im_x_mid:,im_y_mid:]
+            self.source_pos = np.array([x_mid,0.])
+        elif x<x_mid and y<y_mid:
+            out = out[:im_x_mid,im_y_mid:]
+            self.source_pos = np.array([x_mid,y_mid])
+        elif x>=x_mid and y<y_mid:
+            out = out[:im_x_mid,:im_y_mid]
+            self.source_pos = np.array([0.,y_mid])
+
         i=0
         found_empty_point = False 
         while found_empty_point == False:
@@ -259,6 +256,7 @@ class environment:
                 self.source_pos = (size_x/2,size_y/2)
                 found_empty_point = True    
             i+=1
+        
 
         
 
@@ -442,7 +440,7 @@ class environment:
                 k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
             elif patch.type == 'inlet':
-                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform -3 '}           
+                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform -1 '}           
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.00375'}
@@ -617,7 +615,7 @@ if __name__=="__main__":
             env.run_preprocessing()
             env.find_outlet() 
             env.run_ros()
-            # print(str(env.id)+' finished cfd')
+            print(str(env.id)+' finished cfd')
             done = True
             # except:
             #     print(env.id+' failed')
