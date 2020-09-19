@@ -33,10 +33,13 @@ class flow_field:
 
 # the main 'environment' class, contains all major functions 
 class environment:
+    # init with topview img location and ID
     def __init__(self,img_location):
         self.img_location = img_location
         self.id = img_location.split(".")[0].split('/')[-1]    
 
+    # invert topview image: white == occupancy --> black == occupancy
+    # and save the inversed image
     def invert_img(self):
         print('Started env:'+str(self.id))
         self.img = imageio.imread(self.img_location)
@@ -44,7 +47,8 @@ class environment:
         self.img_inverted = -(self.img-255)
         self.img_inverted_location = os.path.abspath(env_pics_folder_inversed) + '/' + self.id +'.png'
         imageio.imwrite(self.img_inverted_location,self.img_inverted)
-        
+
+    # create a folder to store all vector wind information for OpenFOAM    
     def create_cfd_folder(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
         if os.path.exists(self.cfd_folder):
@@ -53,8 +57,10 @@ class environment:
         command = 'cp -r ' + os.path.abspath(empty_cfd_dir) + ' ' +os.path.abspath(self.cfd_folder)
         os.system(command)
 
+    # generates two CAD (.stl) files:
+    # 1) CAD  of walls and obstacles, useful for visualizations
+    # 2) CAD of inside envrionment, used with OpenFOAM 'snappyHexMesh' to create a mesh for CFD
     def extrude_imgs(self):
-
         # generate cad of environment for sim
         self.env_cat_loc = self.cfd_folder + '/constant/triSurface/'+self.id+'_env.stl'
         command = "java -jar "+java_loc+" -input_file "+ self.img_location + " -output_file "+ self.env_cat_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) +' > /dev/null'
@@ -65,10 +71,12 @@ class environment:
         command = "java -jar "+java_loc+" -input_file "+ self.img_inverted_location + " -output_file "+ self.env_flow_loc + " -scale_x "+str(size_x)+ " -scale_y "+str(size_x)+ " -scale_z "+str(height) + ' > /dev/null'
         os.system(command)
 
-
+    # using OpenCV to localize the largest area in the provided topview: this will be our testing area
+    # outputs a 3D point (x,y,z) within that area, this is how we tell the CFD which area we want to model 
+    # coordinate system: origin in bottom left corning (OpenFOAM)
     def find_largest_space(self):
+        # grab all contours within the image
         image = cv2.imread(self.img_inverted_location)
-
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)[1]
         cnts = cv2.findContours(thresh, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
@@ -76,21 +84,25 @@ class environment:
         num_cnts = np.shape(cnts)[0]
         out = np.zeros_like(image)
         areas = np.array([])
-        # loop over the contours
+
+        # compute contour areas
         for c in cnts:
             areas = np.append(areas,cv2.contourArea(c))
 
+        # draw largest contour as go-zone (notice the last argument: 1)
         cv2.drawContours(out, [cnts[np.argmax(areas)]], -1, (0, 255, 0), 1)
         cnts = np.delete(cnts,np.argmax(areas))
 
-        if num_cnts>1:
+        if num_cnts>1: # if enough contours left
             for c in cnts:
-                cv2.drawContours(out, [c], -1, (0, 255, 0), -1)
+                cv2.drawContours(out, [c], -1, (0, 255, 0), -1)  #draw the other contours, but now as no-go zones (see last argument: -1)
 
-        out  = out + cv2.imread(self.img_location)
+        out  = out + cv2.imread(self.img_location) # add walls as no-go zones
         out = np.array(cv2.threshold(cv2.cvtColor(out, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY)[1])
 
-        i=0
+        # iteratively look for an empty point within the largest space 
+        # with clearance of "point clearance" pixels to closest walls (settings.py)
+        i = 0
         found_empty_point = False 
         while found_empty_point == False:
             x, y = random.randint(0,self.img_shape[0]), random.randint(0,self.img_shape[1])
@@ -100,6 +112,7 @@ class environment:
                 self.empty_point = (x*(size_x/self.img_shape[1]),(size_y-y*(size_y/self.img_shape[0])))
                 found_empty_point = True
 
+            # last resort
             elif i>max_it:
                 self.empty_point = (size_x/2,size_y/2)
                 found_empty_point = True
@@ -118,7 +131,6 @@ class environment:
             if line.find("(") == 0:
                 start_line=i+1 
                 break
-
 
         x_min = y_min = np.inf
         x_max = y_max = -np.inf
@@ -184,8 +196,8 @@ class environment:
         f.writelines(lines)
         f.close()
 
+    # place source, decide and write source position with OpenCV
     def place_source(self):
-        # self.source_pos = (size_x/2,size_y/2)
         for patch in self.patches:
             if patch.id == self.outlet:
                 start_face = patch.start
@@ -265,9 +277,8 @@ class environment:
                 found_empty_point = True    
             i+=1
         
-
-        
-
+    # prepare OpenFOAM folder for mesh generation using snappyHexMesh
+    # using pyFOAM to easily interact with dicts
     def pre_snappyhex(self):
 
         # pointing surfaceFeatureExtract to the right .stl file
@@ -287,7 +298,6 @@ class environment:
         snappydir = os.path.abspath(self.cfd_folder)+'/system/snappyHexMeshDict'
         f = ParsedParameterFile(snappydir)
 
-        
         file_entry =  "\"" + self.flow_vol_id + "\""
         f['geometry'] = {self.flow_vol_id: {'type': 'triSurfaceMesh', 'file': file_entry  , 'name': 'flow_vol'}}
 
@@ -300,10 +310,12 @@ class environment:
         f['castellatedMeshControls']['locationInMesh'] = "(" + str(self.empty_point[0]) +" " + str(self.empty_point[1]) +" " + str(1) + ")"
         f.writeFile()
     
+    # run snappyHexMesh: create the mesh for CFD
     def snappyhexmesh(self):
         print(str(self.id)+' started meshing')
         os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && surfaceFeatureExtract && decomposePar && mpirun -np 8 snappyHexMesh -overwrite -parallel &&  reconstructParMesh -constant && autoPatch -overwrite ' + str(autopatch_angle) +' && mv 0.org 0')
-        
+
+    # read in the surfaces created by openfoam, and save them as patches (= surfaces)
     def read_surfaces(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
         self.boundary_folder = self.cfd_folder + '/constant/polyMesh/'
@@ -337,7 +349,7 @@ class environment:
         f.writelines(write_lines)
         f.close()
 
-
+    # read in faces created by OpenFOAM
     def read_faces(self):
         f = open(self.boundary_folder+'faces')
         self.faces = f.readlines()
@@ -359,6 +371,7 @@ class environment:
             
         self.faces = faces
     
+    # read in points created by OpenFOAM
     def read_points(self):
         f = open(self.boundary_folder+'points')
         self.points = f.readlines()
@@ -395,6 +408,7 @@ class environment:
             
             patch.delta_z = maxval-minval
     
+    # pick surfaces with largest vertical distance and largest size as inlet and outlet
     def pick_boundaries(self):
         dtype = [('ID','U10'),('nfaces',int),('delta_z',float)]
 
@@ -405,14 +419,12 @@ class environment:
         sort_arr = np.array(patches,dtype=dtype)
         sorted_arr = np.sort(sort_arr,order=['delta_z','nfaces'])
         
-        print(np.shape(sorted_arr))
         if len(patches)>=top_surfaces:
             sorted_arr = sorted_arr[-top_surfaces:]
             idxs = random.sample(range(0, top_surfaces  ), 2)
         else:
             idxs = random.sample(range(0, len(patches)  ), 2) 
         
-        print(np.shape(sorted_arr))
         self.inlet, self.outlet = sorted_arr[idxs[0]][0], sorted_arr[idxs[1]][0]
 
         for patch in self.patches:
@@ -421,7 +433,7 @@ class environment:
             elif patch.id == self.outlet:
                 patch.type = 'outlet'
 
-
+    # write boundary conditions to OpenFOAM files
     def set_boundary_conditions(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
         featuredir = os.path.abspath(self.cfd_folder)+'/0/'
@@ -460,6 +472,7 @@ class environment:
         k.writeFile()
         eps.writeFile()
     
+    # run OpenFOAM pimpleFOAM
     def run_cfd(self):
         print(str(self.id)+' started cfd')
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
@@ -474,10 +487,12 @@ class environment:
             command = 'rm -rf ' + self.ros_loc + ' && cp -r ' + os.path.abspath(empty_ros_dir) + ' ' + self.ros_loc
             os.system(command)       
 
+    # obtain grid of wind vectors 
     def write_data(self):
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
         os.system('cd '+ os.path.abspath(self.cfd_folder) +' && postProcess -func "components(U)" -latestTime && postProcess -func "writeCellCentres" -latestTime ')
 
+    # prepare ROS directory with environment-specific configurations
     def prep_ros(self):
 
         self.cfd_folder = os.path.abspath(cfd_dir) + '/' + self.id
@@ -528,9 +543,6 @@ class environment:
         command = 'cp  '+self.env_cad_loc+' '+ self.ros_cad_loc
         os.system(command)
 
-        # command = 'cd ' + self.ros_loc+'/cad_models  && meshlabserver -i walls.stl -o walls.dae '
-        # os.system(command)
-
         # get new empty point for source
         self.place_source()
 
@@ -560,9 +572,11 @@ class environment:
         f.writelines(lines)
         f.close()
 
+    # roslaunch GADEN preprocessing
     def run_preprocessing(self):
         os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch')
         self.replace_occ_map()
+        
     def run_ros(self):
         print(str(self.id)+' started filament simulator')
         os.system('cd '+self.ros_launch_folder+' && roslaunch gas_simulator.launch ')
@@ -575,39 +589,49 @@ class environment:
 
 if __name__=="__main__":
 
-    ## read in all environment binary pics
+    ## read in all environment binary pics folder 
+    ## consult settings.py to change default 'env_pics_folder'
     environments = []
     for file in glob.glob(env_pics_folder+"/*"):
         environments.append(environment(os.path.abspath(file)))
     
-    # # check if inversed folder exists, if not create
+    ## check if inversed folder exists, if not create
+    ## inversed folder consists of environment topview images, but with black walls and white free space
     if not os.path.exists(os.path.abspath(env_pics_folder_inversed)):
         os.system('mkdir ' + env_pics_folder_inversed)
 
+    # main loop, for each env
     for env in environments:
+        # an environment may fail ocassionally, so we allow the simulator to have up to 'max_num_tries' (settings.py)
         tries = 0
         done = False
+        
         while not done and tries < max_num_tries:
-            env.invert_img()
-            env.create_cfd_folder()
-            env.extrude_imgs()
-            env.find_largest_space()
-            env.pre_snappyhex()
-            env.snappyhexmesh()
+            env.invert_img() # generate and save the inverted image
+            env.create_cfd_folder() # create a folder to store all wind information for OpenFOAM   
+            env.extrude_imgs() # generates two CAD (.stl) files for visualization and CFD
+            env.find_largest_space() #using OpenCV to localize the largest area in the provided topview: this will be our testing area
+            env.pre_snappyhex() # prepare OpenFOAM folder for mesh generation using snappyHexMesh
+            env.snappyhexmesh() # run snappyHexMesh: create the mesh for CFD
+
+            # load in openFOAM-created mesh
+            # surfaces, consisting of faces, which again consist of points
             env.read_surfaces()
             env.read_faces()
             env.read_points()
-            env.find_walls()
-            env.pick_boundaries()
-            env.place_source()
-            env.set_boundary_conditions()  
-            env.run_cfd()
-            env.write_data()
-            env.make_ros_folder()
-            env.prep_ros()
-            env.run_preprocessing()
-            env.find_outlet() 
-            env.run_ros()
+
+            env.find_walls() # determine orientation of the different surfaces/patches --> if vertical, possible outlet/inlet
+            env.pick_boundaries() # pick surfaces with largest vertical distance and largest size as inlet and outlet
+            env.place_source() # place source, decide and write source position with OpenCV
+            env.set_boundary_conditions()  # write boundary conditions to OpenFOAM files
+            env.run_cfd() # run OpenFOAM pimpleFOAM
+            env.write_data() # obtain grid of wind vectors
+            env.make_ros_folder() # make ROS directory to run GADEN
+            env.prep_ros() # prepare ROS directory with environment-specific configurations
+            env.run_preprocessing() # roslaunch GADEN preprocessing
+            env.find_outlet() # correct the occupancy grid 
+            env.run_ros() # run ROS: filament simulation
+            
             print(str(env.id)+' finished cfd')
             done = True
 
