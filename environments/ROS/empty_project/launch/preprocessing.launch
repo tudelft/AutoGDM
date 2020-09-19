@@ -17,7 +17,7 @@
                 
         #CAD model of the outlets (.stl)
         <param name="number_of_outlet_models" value="0"/>
-        
+
         #3D Location of a point in free-space
         <param name="empty_point_x" value="3.0"/>      ### (m)
         <param name="empty_point_y" value="3.0"/>      ### (m)

@@ -1,8 +1,12 @@
+"""
+Main script to run the automated CFD pipeline
+Author: Bart Duisterhof, MAVLab, Delft, Netherlands
+"""
+
 from settings import *
 import glob
 import os
 import imageio
-import mpi4py.MPI
 from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile
 import cv2
 import imutils
@@ -10,8 +14,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import pandas as pd
-from multiprocessing import Pool
 from stl import mesh
+
+# patch class, a patch is a surface in the mesh
+# we use this class to store the faces it consists of and its type, e.g., 'wall', 'inlet', 'outlet
 
 class patch:
     def __init__(self, id, start_face, nfaces ):
@@ -20,15 +26,16 @@ class patch:
         self.nfaces = nfaces
         self.type = 'wall'
 
+# simple ( probably unnecessary ) class to store a timestep
 class flow_field:
     def __init__(self,id):
         self.id = id
 
+# the main 'environment' class, contains all major functions 
 class environment:
     def __init__(self,img_location):
         self.img_location = img_location
-        self.id = img_location.split(".")[0].split('/')[-1]
-        
+        self.id = img_location.split(".")[0].split('/')[-1]    
 
     def invert_img(self):
         print('Started env:'+str(self.id))
@@ -227,6 +234,7 @@ class environment:
 
         out  = out + original_img
         out = np.array(cv2.threshold(cv2.cvtColor(out, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY)[1])
+        self.occ_map = -(out-255)
 
         if x>=x_mid and y>=y_mid:
             out = out[im_x_mid:,:im_y_mid]
@@ -532,9 +540,9 @@ class environment:
         lines = f.readlines()
         lines[5] = '    <arg name="scenario" default="'+self.id+ '"/>'
 
-        lines[20] ='        <param name="empty_point_x" value="'+str(self.source_pos[0])+'"/>      ### (m)'
-        lines[21] ='        <param name="empty_point_y" value="'+str(self.source_pos[1])+'"/>      ### (m)'
-        lines[22] ='        <param name="empty_point_z" value="'+str(source_height)+'"/>      ### (m)'
+        lines[21] ='        <param name="empty_point_x" value="'+str(self.source_pos[1])+'"/>      ### (m)'
+        lines[22] ='        <param name="empty_point_y" value="'+str(self.source_pos[0])+'"/>      ### (m)'
+        lines[23] ='        <param name="empty_point_z" value="'+str(source_height)+'"/>      ### (m)'
 
         f = open(self.ros_launch_folder+'preprocessing.launch',"w")
         f.writelines(lines)
@@ -554,34 +562,20 @@ class environment:
 
     def run_preprocessing(self):
         os.system('cd '+self.ros_launch_folder+' && roslaunch preprocessing.launch')
+        self.replace_occ_map()
     def run_ros(self):
         print(str(self.id)+' started filament simulator')
         os.system('cd '+self.ros_launch_folder+' && roslaunch gas_simulator.launch ')
 
-def run_ros_loop(env):
-    tries = 0
-    done = False
-
-    while not done and tries < max_num_tries:
-        try:
-            env.make_ros_folder()
-            env.prep_ros()
-            env.run_ros()
-            print(str(env.id)+' finished ros')
-            done = True
-        except:
-            print(env.id+' failed')
-            tries+=1
+    def replace_occ_map(self):
+        occ_loc = self.ros_loc+'/occupancy.pgm'
+        imageio.imwrite(occ_loc,cv2.resize(self.occ_map,(1000,1000)))
 
 
 
 if __name__=="__main__":
-    # #find out which number processor this particular instance is,
-    # #and how many there are in total
-    rank = mpi4py.MPI.COMM_WORLD.Get_rank()
-    size = mpi4py.MPI.COMM_WORLD.Get_size()
 
-    # # read in all environment pics
+    ## read in all environment binary pics
     environments = []
     for file in glob.glob(env_pics_folder+"/*"):
         environments.append(environment(os.path.abspath(file)))
@@ -594,7 +588,6 @@ if __name__=="__main__":
         tries = 0
         done = False
         while not done and tries < max_num_tries:
-            # try:
             env.invert_img()
             env.create_cfd_folder()
             env.extrude_imgs()
@@ -617,12 +610,7 @@ if __name__=="__main__":
             env.run_ros()
             print(str(env.id)+' finished cfd')
             done = True
-            # except:
-            #     print(env.id+' failed')
-            #     tries+=1
-    
-    # pool = Pool()
-    # pool.map(run_ros_loop,environments)
+
 
 
 

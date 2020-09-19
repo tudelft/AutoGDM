@@ -1,0 +1,178 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+26
+(
+    auto0
+    {
+        type            wall;
+        nFaces          1080;
+        startFace       249116;
+    }
+    auto1
+    {
+        type            wall;
+        nFaces          455;
+        startFace       250196;
+    }
+    auto2
+    {
+        type            wall;
+        nFaces          4373;
+        startFace       250651;
+    }
+    auto3
+    {
+        type            wall;
+        nFaces          4145;
+        startFace       255024;
+    }
+    auto4
+    {
+        type            wall;
+        nFaces          753;
+        startFace       259169;
+    }
+    auto5
+    {
+        type            wall;
+        nFaces          6633;
+        startFace       259922;
+    }
+    auto6
+    {
+        type            wall;
+        nFaces          761;
+        startFace       266555;
+    }
+    auto7
+    {
+        type            wall;
+        nFaces          6755;
+        startFace       267316;
+    }
+    auto8
+    {
+        type            wall;
+        nFaces          808;
+        startFace       274071;
+    }
+    auto9
+    {
+        type            wall;
+        nFaces          1775;
+        startFace       274879;
+    }
+    auto10
+    {
+        type            wall;
+        nFaces          997;
+        startFace       276654;
+    }
+    auto11
+    {
+        type            wall;
+        nFaces          785;
+        startFace       277651;
+    }
+    auto12
+    {
+        type            wall;
+        nFaces          650;
+        startFace       278436;
+    }
+    auto13
+    {
+        type            wall;
+        nFaces          659;
+        startFace       279086;
+    }
+    auto14
+    {
+        type            wall;
+        nFaces          1088;
+        startFace       279745;
+    }
+    auto15
+    {
+        type            wall;
+        nFaces          4406;
+        startFace       280833;
+    }
+    auto16
+    {
+        type            wall;
+        nFaces          583;
+        startFace       285239;
+    }
+    auto17
+    {
+        type            wall;
+        nFaces          4049;
+        startFace       285822;
+    }
+    auto18
+    {
+        type            wall;
+        nFaces          891;
+        startFace       289871;
+    }
+    auto19
+    {
+        type            wall;
+        nFaces          485;
+        startFace       290762;
+    }
+    auto20
+    {
+        type            wall;
+        nFaces          1206;
+        startFace       291247;
+    }
+    auto21
+    {
+        type            wall;
+        nFaces          761;
+        startFace       292453;
+    }
+    auto22
+    {
+        type            wall;
+        nFaces          829;
+        startFace       293214;
+    }
+    auto23
+    {
+        type            wall;
+        nFaces          1063;
+        startFace       294043;
+    }
+    auto24
+    {
+        type            wall;
+        nFaces          629;
+        startFace       295106;
+    }
+    auto25
+    {
+        type            wall;
+        nFaces          989;
+        startFace       295735;
+    }
+)
+
+// ************************************************************************* //

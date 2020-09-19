@@ -1,8 +1,0 @@
-prefix=/home/bart/CFD_pipeline/simulation_ws/install
-
-Name: turtlebot_teleop
-Description: Description of turtlebot_teleop
-Version: 2.3.11
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: roscpp geometry_msgs joy

@@ -1,0 +1,232 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+35
+(
+    auto0
+    {
+        type            wall;
+        nFaces          958;
+        startFace       260377;
+    }
+    auto1
+    {
+        type            wall;
+        nFaces          1886;
+        startFace       261335;
+    }
+    auto2
+    {
+        type            wall;
+        nFaces          4724;
+        startFace       263221;
+    }
+    auto3
+    {
+        type            wall;
+        nFaces          6563;
+        startFace       267945;
+    }
+    auto4
+    {
+        type            wall;
+        nFaces          440;
+        startFace       274508;
+    }
+    auto5
+    {
+        type            wall;
+        nFaces          613;
+        startFace       274948;
+    }
+    auto6
+    {
+        type            wall;
+        nFaces          6225;
+        startFace       275561;
+    }
+    auto7
+    {
+        type            wall;
+        nFaces          1218;
+        startFace       281786;
+    }
+    auto8
+    {
+        type            wall;
+        nFaces          491;
+        startFace       283004;
+    }
+    auto9
+    {
+        type            wall;
+        nFaces          1766;
+        startFace       283495;
+    }
+    auto10
+    {
+        type            wall;
+        nFaces          1258;
+        startFace       285261;
+    }
+    auto11
+    {
+        type            wall;
+        nFaces          906;
+        startFace       286519;
+    }
+    auto12
+    {
+        type            wall;
+        nFaces          771;
+        startFace       287425;
+    }
+    auto13
+    {
+        type            wall;
+        nFaces          769;
+        startFace       288196;
+    }
+    auto14
+    {
+        type            wall;
+        nFaces          2909;
+        startFace       288965;
+    }
+    auto15
+    {
+        type            wall;
+        nFaces          898;
+        startFace       291874;
+    }
+    auto16
+    {
+        type            wall;
+        nFaces          430;
+        startFace       292772;
+    }
+    auto17
+    {
+        type            wall;
+        nFaces          448;
+        startFace       293202;
+    }
+    auto18
+    {
+        type            wall;
+        nFaces          568;
+        startFace       293650;
+    }
+    auto19
+    {
+        type            wall;
+        nFaces          951;
+        startFace       294218;
+    }
+    auto20
+    {
+        type            wall;
+        nFaces          674;
+        startFace       295169;
+    }
+    auto21
+    {
+        type            wall;
+        nFaces          881;
+        startFace       295843;
+    }
+    auto22
+    {
+        type            wall;
+        nFaces          572;
+        startFace       296724;
+    }
+    auto23
+    {
+        type            wall;
+        nFaces          2426;
+        startFace       297296;
+    }
+    auto24
+    {
+        type            wall;
+        nFaces          547;
+        startFace       299722;
+    }
+    auto25
+    {
+        type            wall;
+        nFaces          1043;
+        startFace       300269;
+    }
+    auto26
+    {
+        type            wall;
+        nFaces          1118;
+        startFace       301312;
+    }
+    auto27
+    {
+        type            wall;
+        nFaces          652;
+        startFace       302430;
+    }
+    auto28
+    {
+        type            wall;
+        nFaces          896;
+        startFace       303082;
+    }
+    auto29
+    {
+        type            wall;
+        nFaces          3;
+        startFace       303978;
+    }
+    auto30
+    {
+        type            wall;
+        nFaces          793;
+        startFace       303981;
+    }
+    auto31
+    {
+        type            wall;
+        nFaces          681;
+        startFace       304774;
+    }
+    auto32
+    {
+        type            wall;
+        nFaces          2036;
+        startFace       305455;
+    }
+    auto33
+    {
+        type            wall;
+        nFaces          858;
+        startFace       307491;
+    }
+    auto34
+    {
+        type            wall;
+        nFaces          616;
+        startFace       308349;
+    }
+)
+
+// ************************************************************************* //

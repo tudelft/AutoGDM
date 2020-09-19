@@ -1,8 +1,0 @@
-prefix=/home/bart/CFD_pipeline/simulation_ws/devel
-
-Name: create_driver
-Description: Description of create_driver
-Version: 2.3.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

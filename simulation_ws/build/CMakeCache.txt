@@ -348,10 +348,10 @@ GTEST_MAIN_LIBRARY:FILEPATH=GTEST_MAIN_LIBRARY-NOTFOUND
 GTEST_MAIN_LIBRARY_DEBUG:FILEPATH=GTEST_MAIN_LIBRARY_DEBUG-NOTFOUND
 
 //Path to a file.
-LIBUSB_1_INCLUDE_DIR:PATH=/usr/include
+LIBUSB_1_INCLUDE_DIR:PATH=LIBUSB_1_INCLUDE_DIR-NOTFOUND
 
 //Path to a library.
-LIBUSB_1_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libusb-1.0.so
+LIBUSB_1_LIBRARY:FILEPATH=LIBUSB_1_LIBRARY-NOTFOUND
 
 //lsb_release executable was found
 LSB_FOUND:BOOL=TRUE
@@ -671,36 +671,6 @@ class_loader_DIR:PATH=/opt/ros/melodic/share/class_loader/cmake
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/melodic/share/cpp_common/cmake
 
-//Value Computed by CMake
-create_description_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_create/create_description
-
-//Value Computed by CMake
-create_description_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_create/create_description
-
-//Value Computed by CMake
-create_driver_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_create/create_driver
-
-//The directory containing a CMake configuration file for create_driver.
-create_driver_DIR:PATH=/home/bart/CFD_pipeline/simulation_ws/devel/share/create_driver/cmake
-
-//Value Computed by CMake
-create_driver_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_create/create_driver
-
-//Value Computed by CMake
-create_node_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_create/create_node
-
-//Value Computed by CMake
-create_node_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_create/create_node
-
-//The directory containing a CMake configuration file for cv_bridge.
-cv_bridge_DIR:PATH=/opt/ros/melodic/share/cv_bridge/cmake
-
-//The directory containing a CMake configuration file for diagnostic_msgs.
-diagnostic_msgs_DIR:PATH=/opt/ros/melodic/share/diagnostic_msgs/cmake
-
-//The directory containing a CMake configuration file for diagnostic_updater.
-diagnostic_updater_DIR:PATH=/opt/ros/melodic/share/diagnostic_updater/cmake
-
 //The directory containing a CMake configuration file for dynamic_reconfigure.
 dynamic_reconfigure_DIR:PATH=/opt/ros/melodic/share/dynamic_reconfigure/cmake
 
@@ -709,12 +679,6 @@ envs_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/gaden/envs
 
 //Value Computed by CMake
 envs_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/gaden/envs
-
-//Value Computed by CMake
-follow_line_tc_pkg_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/follow_line_tc_pkg
-
-//Value Computed by CMake
-follow_line_tc_pkg_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/follow_line_tc_pkg
 
 //Value Computed by CMake
 gaden_environment_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/gaden/gaden_environment
@@ -810,17 +774,8 @@ gtest_hide_internal_symbols:BOOL=OFF
 //Dependencies for the target
 gtest_main_LIB_DEPENDS:STATIC=general;-lpthread;general;gtest;
 
-//The directory containing a CMake configuration file for joy.
-joy_DIR:PATH=/opt/ros/melodic/share/joy/cmake
-
-//Value Computed by CMake
-kobuki_description_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/kobuki_description
-
-//Value Computed by CMake
-kobuki_description_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/kobuki_description
-
 //Path to a library.
-lib:FILEPATH=/opt/ros/melodic/lib/libxmlrpcpp.so
+lib:FILEPATH=/opt/ros/melodic/lib/libtopic_tools.so
 
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/melodic/share/message_filters/cmake
@@ -830,18 +785,6 @@ message_generation_DIR:PATH=/opt/ros/melodic/share/message_generation/cmake
 
 //The directory containing a CMake configuration file for message_runtime.
 message_runtime_DIR:PATH=/opt/ros/melodic/share/message_runtime/cmake
-
-//Value Computed by CMake
-multiple_kobukis_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/multiple_kobukis
-
-//Value Computed by CMake
-multiple_kobukis_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/multiple_kobukis
-
-//Value Computed by CMake
-my_turtlebot2_training_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/my_turtlebot2_training
-
-//Value Computed by CMake
-my_turtlebot2_training_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/my_turtlebot2_training
 
 //The directory containing a CMake configuration file for nav_msgs.
 nav_msgs_DIR:PATH=/opt/ros/melodic/share/nav_msgs/cmake
@@ -861,12 +804,6 @@ olfaction_msgs_DIR:PATH=/home/bart/CFD_pipeline/simulation_ws/devel/share/olfact
 //Value Computed by CMake
 olfaction_msgs_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/olfaction_msgs
 
-//Value Computed by CMake
-openai_ros_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/openai_ros/openai_ros
-
-//Value Computed by CMake
-openai_ros_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/openai_ros/openai_ros
-
 //The directory containing a CMake configuration file for pcl_conversions.
 pcl_conversions_DIR:PATH=/opt/ros/melodic/share/pcl_conversions/cmake
 
@@ -875,9 +812,6 @@ pcl_msgs_DIR:PATH=/opt/ros/melodic/share/pcl_msgs/cmake
 
 //The directory containing a CMake configuration file for pcl_ros.
 pcl_ros_DIR:PATH=/opt/ros/melodic/share/pcl_ros/cmake
-
-//The directory containing a CMake configuration file for pid.
-pid_DIR:PATH=/opt/ros/melodic/share/pid/cmake
 
 //The directory containing a CMake configuration file for pluginlib.
 pluginlib_DIR:PATH=/opt/ros/melodic/share/pluginlib/cmake
@@ -890,9 +824,6 @@ rosbag_storage_DIR:PATH=/opt/ros/melodic/share/rosbag_storage/cmake
 
 //The directory containing a CMake configuration file for rosconsole.
 rosconsole_DIR:PATH=/opt/ros/melodic/share/rosconsole/cmake
-
-//The directory containing a CMake configuration file for rosconsole_bridge.
-rosconsole_bridge_DIR:PATH=/opt/ros/melodic/share/rosconsole_bridge/cmake
 
 //The directory containing a CMake configuration file for roscpp.
 roscpp_DIR:PATH=/opt/ros/melodic/share/roscpp/cmake
@@ -975,80 +906,8 @@ tf_DIR:PATH=/opt/ros/melodic/share/tf/cmake
 //The directory containing a CMake configuration file for topic_tools.
 topic_tools_DIR:PATH=/opt/ros/melodic/share/topic_tools/cmake
 
-//Value Computed by CMake
-turtlebot_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot
-
-//Value Computed by CMake
-turtlebot_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot
-
-//Value Computed by CMake
-turtlebot_bringup_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_bringup
-
-//Value Computed by CMake
-turtlebot_bringup_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_bringup
-
-//Value Computed by CMake
-turtlebot_create_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_create/turtlebot_create
-
-//Value Computed by CMake
-turtlebot_create_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_create/turtlebot_create
-
-//Value Computed by CMake
-turtlebot_description_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_description
-
-//Value Computed by CMake
-turtlebot_description_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_description
-
-//Value Computed by CMake
-turtlebot_gazebo_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_gazebo
-
-//Value Computed by CMake
-turtlebot_gazebo_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_gazebo
-
-//Value Computed by CMake
-turtlebot_navigation_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_navigation
-
-//Value Computed by CMake
-turtlebot_navigation_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_navigation
-
-//Value Computed by CMake
-turtlebot_navigation_gazebo_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_navigation_gazebo
-
-//Value Computed by CMake
-turtlebot_navigation_gazebo_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_navigation_gazebo
-
-//Value Computed by CMake
-turtlebot_project_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_project
-
-//Value Computed by CMake
-turtlebot_project_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_project
-
-//Value Computed by CMake
-turtlebot_rtab_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_rtab
-
-//Value Computed by CMake
-turtlebot_rtab_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_rtab
-
-//Value Computed by CMake
-turtlebot_rviz_launchers_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_rviz_launchers
-
-//Value Computed by CMake
-turtlebot_rviz_launchers_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_rviz_launchers
-
-//Value Computed by CMake
-turtlebot_teleop_BINARY_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/build/turtlebot/turtlebot_teleop
-
-//Value Computed by CMake
-turtlebot_teleop_SOURCE_DIR:STATIC=/home/bart/CFD_pipeline/simulation_ws/src/turtlebot/turtlebot_teleop
-
-//The directory containing a CMake configuration file for urdf.
-urdf_DIR:PATH=/opt/ros/melodic/share/urdf/cmake
-
 //The directory containing a CMake configuration file for visualization_msgs.
 visualization_msgs_DIR:PATH=/opt/ros/melodic/share/visualization_msgs/cmake
-
-//The directory containing a CMake configuration file for xacro.
-xacro_DIR:PATH=/opt/ros/melodic/share/xacro/cmake
 
 //The directory containing a CMake configuration file for xmlrpcpp.
 xmlrpcpp_DIR:PATH=/opt/ros/melodic/share/xmlrpcpp/cmake
@@ -1155,6 +1014,8 @@ CMAKE_C_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_C_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS_RELWITHDEBINFO
 CMAKE_C_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//Path to cache edit program executable.
+CMAKE_EDIT_COMMAND:INTERNAL=/usr/bin/ccmake
 //Executable file format
 CMAKE_EXECUTABLE_FORMAT:INTERNAL=ELF
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS
@@ -1207,7 +1068,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=32
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=13
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -1318,8 +1179,6 @@ FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/usr/bin/python2][v2.7.17()]
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding eigen
 FIND_PACKAGE_MESSAGE_DETAILS_eigen:INTERNAL=[/usr/include/eigen3][v()]
-//Details about finding libusb-1.0
-FIND_PACKAGE_MESSAGE_DETAILS_libusb-1.0:INTERNAL=[/usr/include][v()]
 //Details about finding openni
 FIND_PACKAGE_MESSAGE_DETAILS_openni:INTERNAL=[/usr/lib/libOpenNI.so][/usr/include/ni][v()]
 //Details about finding qhull

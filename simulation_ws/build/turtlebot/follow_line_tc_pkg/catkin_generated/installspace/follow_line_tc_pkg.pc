@@ -1,8 +1,0 @@
-prefix=/home/bart/CFD_pipeline/simulation_ws/install
-
-Name: follow_line_tc_pkg
-Description: Description of follow_line_tc_pkg
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
