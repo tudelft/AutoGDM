@@ -1,6 +1,6 @@
 # AutoGDM
 
-<img align="left" src="https://raw.githubusercontent.com/Duisterhof/AutoGDM/master/logo.png">
+<img align="left" src="https://github.com/Duisterhof/AutoGDM/blob/master/logo.png">
 
 AutoGDM is an automated gas dispersion modelling (GDM) pipeline aimed at robotics research. The pipeline takes binary topview images as input and computes a 3D gas concentration map. It uses the ROS [GADEN](https://github.com/MAPIRlab/gaden) package as a filament simulator, and [OpenFOAM](https://www.openfoam.com/) CFD to generate a 3D flow field. 
 
