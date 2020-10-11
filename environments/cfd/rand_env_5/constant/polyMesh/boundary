@@ -15,193 +15,43 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-31
+6
 (
     auto0
     {
         type            wall;
-        nFaces          3884;
-        startFace       270789;
+        nFaces          7172;
+        startFace       325388;
     }
     auto1
     {
         type            wall;
-        nFaces          2568;
-        startFace       274673;
+        nFaces          7172;
+        startFace       332560;
     }
     auto2
     {
         type            wall;
-        nFaces          4595;
-        startFace       277241;
+        nFaces          14908;
+        startFace       339732;
     }
     auto3
     {
         type            wall;
-        nFaces          7758;
-        startFace       281836;
+        nFaces          14500;
+        startFace       354640;
     }
     auto4
     {
         type            wall;
-        nFaces          7323;
-        startFace       289594;
+        nFaces          7172;
+        startFace       369140;
     }
     auto5
     {
         type            wall;
-        nFaces          1276;
-        startFace       296917;
-    }
-    auto6
-    {
-        type            wall;
-        nFaces          160;
-        startFace       298193;
-    }
-    auto7
-    {
-        type            wall;
-        nFaces          844;
-        startFace       298353;
-    }
-    auto8
-    {
-        type            wall;
-        nFaces          1404;
-        startFace       299197;
-    }
-    auto9
-    {
-        type            wall;
-        nFaces          1970;
-        startFace       300601;
-    }
-    auto10
-    {
-        type            wall;
-        nFaces          1644;
-        startFace       302571;
-    }
-    auto11
-    {
-        type            wall;
-        nFaces          720;
-        startFace       304215;
-    }
-    auto12
-    {
-        type            wall;
-        nFaces          1067;
-        startFace       304935;
-    }
-    auto13
-    {
-        type            wall;
-        nFaces          1467;
-        startFace       306002;
-    }
-    auto14
-    {
-        type            wall;
-        nFaces          1377;
-        startFace       307469;
-    }
-    auto15
-    {
-        type            wall;
-        nFaces          3422;
-        startFace       308846;
-    }
-    auto16
-    {
-        type            wall;
-        nFaces          160;
-        startFace       312268;
-    }
-    auto17
-    {
-        type            wall;
-        nFaces          728;
-        startFace       312428;
-    }
-    auto18
-    {
-        type            wall;
-        nFaces          869;
-        startFace       313156;
-    }
-    auto19
-    {
-        type            wall;
-        nFaces          1061;
-        startFace       314025;
-    }
-    auto20
-    {
-        type            wall;
-        nFaces          4073;
-        startFace       315086;
-    }
-    auto21
-    {
-        type            wall;
-        nFaces          1067;
-        startFace       319159;
-    }
-    auto22
-    {
-        type            wall;
-        nFaces          700;
-        startFace       320226;
-    }
-    auto23
-    {
-        type            wall;
-        nFaces          665;
-        startFace       320926;
-    }
-    auto24
-    {
-        type            wall;
-        nFaces          1007;
-        startFace       321591;
-    }
-    auto25
-    {
-        type            wall;
-        nFaces          3;
-        startFace       322598;
-    }
-    auto26
-    {
-        type            wall;
-        nFaces          977;
-        startFace       322601;
-    }
-    auto27
-    {
-        type            wall;
-        nFaces          1260;
-        startFace       323578;
-    }
-    auto28
-    {
-        type            wall;
-        nFaces          870;
-        startFace       324838;
-    }
-    auto29
-    {
-        type            wall;
-        nFaces          1185;
-        startFace       325708;
-    }
-    auto30
-    {
-        type            wall;
-        nFaces          240;
-        startFace       326893;
+        nFaces          7172;
+        startFace       376312;
     }
 )
 

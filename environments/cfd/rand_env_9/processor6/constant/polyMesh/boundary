@@ -21,15 +21,15 @@ FoamFile
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          4322;
-        startFace       25562;
+        nFaces          6219;
+        startFace       39596;
     }
     procBoundary6to2
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          391;
-        startFace       29884;
+        nFaces          311;
+        startFace       45815;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        6;
@@ -39,8 +39,8 @@ FoamFile
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          1542;
-        startFace       30275;
+        nFaces          516;
+        startFace       46126;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        6;
@@ -50,8 +50,8 @@ FoamFile
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          355;
-        startFace       31817;
+        nFaces          454;
+        startFace       46642;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        6;

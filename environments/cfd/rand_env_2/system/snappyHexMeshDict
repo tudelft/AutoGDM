@@ -65,7 +65,7 @@ castellatedMeshControls
         );
     }
   }
-  locationInMesh (2.9285714285714284 1.5714285714285712 1);
+  locationInMesh (0.7857142857142857 6.714285714285714 1);
   allowFreeStandingZoneFaces yes;
 } 	// Settings for the snapping.
 

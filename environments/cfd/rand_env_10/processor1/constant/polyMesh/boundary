@@ -15,21 +15,21 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-4
+6
 (
     flow_vol
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          6413;
-        startFace       31040;
+        nFaces          5146;
+        startFace       36802;
     }
     procBoundary1to0
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          373;
-        startFace       37453;
+        nFaces          575;
+        startFace       41948;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        1;
@@ -39,23 +39,45 @@ FoamFile
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          326;
-        startFace       37826;
+        nFaces          573;
+        startFace       42523;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        1;
         neighbProcNo    2;
     }
+    procBoundary1to4
+    {
+        type            processor;
+        inGroups        List<word> 1(processor);
+        nFaces          1;
+        startFace       43096;
+        matchTolerance  0.0001;
+        transform       unknown;
+        myProcNo        1;
+        neighbProcNo    4;
+    }
     procBoundary1to5
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          116;
-        startFace       38152;
+        nFaces          324;
+        startFace       43097;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        1;
         neighbProcNo    5;
+    }
+    procBoundary1to6
+    {
+        type            processor;
+        inGroups        List<word> 1(processor);
+        nFaces          2;
+        startFace       43421;
+        matchTolerance  0.0001;
+        transform       unknown;
+        myProcNo        1;
+        neighbProcNo    6;
     }
 )
 

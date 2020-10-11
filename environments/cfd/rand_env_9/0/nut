@@ -23,7 +23,7 @@ boundaryField
   }
   auto1
   {
-    type nutkWallFunction;
+    type calculated;
     value uniform 0;
   }
   auto2
@@ -33,7 +33,7 @@ boundaryField
   }
   auto3
   {
-    type calculated;
+    type nutkWallFunction;
     value uniform 0;
   }
   auto4
@@ -43,122 +43,7 @@ boundaryField
   }
   auto5
   {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto6
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto7
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto8
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto9
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto10
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto11
-  {
     type calculated;
-    value uniform 0;
-  }
-  auto12
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto13
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto14
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto15
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto16
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto17
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto18
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto19
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto20
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto21
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto22
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto23
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto24
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto25
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto26
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto27
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto28
-  {
-    type nutkWallFunction;
     value uniform 0;
   }
 } 	// ************************************************************************* //

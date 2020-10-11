@@ -18,17 +18,17 @@ boundaryField
 {
   auto0
   {
-    type calculated;
+    type nutkWallFunction;
     value uniform 0;
   }
   auto1
   {
-    type nutkWallFunction;
+    type calculated;
     value uniform 0;
   }
   auto2
   {
-    type calculated;
+    type nutkWallFunction;
     value uniform 0;
   }
   auto3
@@ -43,157 +43,7 @@ boundaryField
   }
   auto5
   {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto6
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto7
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto8
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto9
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto10
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto11
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto12
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto13
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto14
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto15
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto16
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto17
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto18
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto19
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto20
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto21
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto22
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto23
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto24
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto25
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto26
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto27
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto28
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto29
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto30
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto31
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto32
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto33
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto34
-  {
-    type nutkWallFunction;
-    value uniform 0;
-  }
-  auto35
-  {
-    type nutkWallFunction;
+    type calculated;
     value uniform 0;
   }
 } 	// ************************************************************************* //

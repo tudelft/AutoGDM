@@ -460,7 +460,7 @@ class environment:
                 k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
             elif patch.type == 'inlet':
-                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform -1 '}           
+                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform -0.5 '}           
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.00375'}

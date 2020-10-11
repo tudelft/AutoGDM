@@ -23,7 +23,7 @@ boundaryField
   }
   auto1
   {
-    type fixedValue;
+    type kqRWallFunction;
     value uniform 0.00375;
   }
   auto2
@@ -38,121 +38,11 @@ boundaryField
   }
   auto4
   {
-    type kqRWallFunction;
-    value uniform 0.00375;
+    type zeroGradient;
   }
   auto5
   {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto6
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto7
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto8
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto9
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto10
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto11
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto12
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto13
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto14
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto15
-  {
-    type zeroGradient;
-  }
-  auto16
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto17
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto18
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto19
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto20
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto21
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto22
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto23
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto24
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto25
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto26
-  {
-    type kqRWallFunction;
-    value uniform 0.00375;
-  }
-  auto27
-  {
-    type kqRWallFunction;
+    type fixedValue;
     value uniform 0.00375;
   }
 } 	// ************************************************************************* //

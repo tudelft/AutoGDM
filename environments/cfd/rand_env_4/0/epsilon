@@ -18,12 +18,12 @@ boundaryField
 {
   auto0
   {
-    type zeroGradient;
+    type epsilonWallFunction;
+    value uniform 0.0125;
   }
   auto1
   {
-    type epsilonWallFunction;
-    value uniform 0.0125;
+    type zeroGradient;
   }
   auto2
   {
@@ -37,95 +37,10 @@ boundaryField
   }
   auto4
   {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto5
-  {
     type fixedValue;
     value uniform 0.0125;
   }
-  auto6
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto7
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto8
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto9
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto10
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto11
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto12
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto13
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto14
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto15
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto16
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto17
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto18
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto19
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto20
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto21
-  {
-    type epsilonWallFunction;
-    value uniform 0.0125;
-  }
-  auto22
+  auto5
   {
     type epsilonWallFunction;
     value uniform 0.0125;

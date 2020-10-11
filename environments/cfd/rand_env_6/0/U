@@ -18,11 +18,12 @@ boundaryField
 {
   auto0
   {
-    type noSlip;
+    refValue uniform -0.5 ;
+    type surfaceNormalFixedValue;
   }
   auto1
   {
-    type noSlip;
+    type zeroGradient;
   }
   auto2
   {
@@ -37,123 +38,6 @@ boundaryField
     type noSlip;
   }
   auto5
-  {
-    type noSlip;
-  }
-  auto6
-  {
-    type noSlip;
-  }
-  auto7
-  {
-    type noSlip;
-  }
-  auto8
-  {
-    type noSlip;
-  }
-  auto9
-  {
-    type noSlip;
-  }
-  auto10
-  {
-    type noSlip;
-  }
-  auto11
-  {
-    type noSlip;
-  }
-  auto12
-  {
-    type noSlip;
-  }
-  auto13
-  {
-    type noSlip;
-  }
-  auto14
-  {
-    refValue uniform -1 ;
-    type surfaceNormalFixedValue;
-  }
-  auto15
-  {
-    type noSlip;
-  }
-  auto16
-  {
-    type noSlip;
-  }
-  auto17
-  {
-    type noSlip;
-  }
-  auto18
-  {
-    type noSlip;
-  }
-  auto19
-  {
-    type noSlip;
-  }
-  auto20
-  {
-    type noSlip;
-  }
-  auto21
-  {
-    type noSlip;
-  }
-  auto22
-  {
-    type noSlip;
-  }
-  auto23
-  {
-    type zeroGradient;
-  }
-  auto24
-  {
-    type noSlip;
-  }
-  auto25
-  {
-    type noSlip;
-  }
-  auto26
-  {
-    type noSlip;
-  }
-  auto27
-  {
-    type noSlip;
-  }
-  auto28
-  {
-    type noSlip;
-  }
-  auto29
-  {
-    type noSlip;
-  }
-  auto30
-  {
-    type noSlip;
-  }
-  auto31
-  {
-    type noSlip;
-  }
-  auto32
-  {
-    type noSlip;
-  }
-  auto33
-  {
-    type noSlip;
-  }
-  auto34
   {
     type noSlip;
   }

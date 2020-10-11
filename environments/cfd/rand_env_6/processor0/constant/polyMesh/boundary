@@ -21,15 +21,15 @@ FoamFile
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          5620;
-        startFace       26507;
+        nFaces          8212;
+        startFace       39920;
     }
     procBoundary0to1
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          615;
-        startFace       32127;
+        nFaces          566;
+        startFace       48132;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        0;
@@ -39,8 +39,8 @@ FoamFile
     {
         type            processor;
         inGroups        List<word> 1(processor);
-        nFaces          144;
-        startFace       32742;
+        nFaces          236;
+        startFace       48698;
         matchTolerance  0.0001;
         transform       unknown;
         myProcNo        0;

@@ -18,12 +18,12 @@ boundaryField
 {
   auto0
   {
-    type fixedValue;
-    value uniform 0;
+    type zeroGradient;
   }
   auto1
   {
-    type zeroGradient;
+    type fixedValue;
+    value uniform 0;
   }
   auto2
   {
@@ -38,106 +38,6 @@ boundaryField
     type zeroGradient;
   }
   auto5
-  {
-    type zeroGradient;
-  }
-  auto6
-  {
-    type zeroGradient;
-  }
-  auto7
-  {
-    type zeroGradient;
-  }
-  auto8
-  {
-    type zeroGradient;
-  }
-  auto9
-  {
-    type zeroGradient;
-  }
-  auto10
-  {
-    type zeroGradient;
-  }
-  auto11
-  {
-    type zeroGradient;
-  }
-  auto12
-  {
-    type zeroGradient;
-  }
-  auto13
-  {
-    type zeroGradient;
-  }
-  auto14
-  {
-    type zeroGradient;
-  }
-  auto15
-  {
-    type zeroGradient;
-  }
-  auto16
-  {
-    type zeroGradient;
-  }
-  auto17
-  {
-    type zeroGradient;
-  }
-  auto18
-  {
-    type zeroGradient;
-  }
-  auto19
-  {
-    type zeroGradient;
-  }
-  auto20
-  {
-    type zeroGradient;
-  }
-  auto21
-  {
-    type zeroGradient;
-  }
-  auto22
-  {
-    type zeroGradient;
-  }
-  auto23
-  {
-    type zeroGradient;
-  }
-  auto24
-  {
-    type zeroGradient;
-  }
-  auto25
-  {
-    type zeroGradient;
-  }
-  auto26
-  {
-    type zeroGradient;
-  }
-  auto27
-  {
-    type zeroGradient;
-  }
-  auto28
-  {
-    type zeroGradient;
-  }
-  auto29
-  {
-    type zeroGradient;
-  }
-  auto30
   {
     type zeroGradient;
   }

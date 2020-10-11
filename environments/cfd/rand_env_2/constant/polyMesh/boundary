@@ -15,169 +15,43 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-27
+6
 (
     auto0
     {
         type            wall;
-        nFaces          1900;
-        startFace       238548;
+        nFaces          7172;
+        startFace       325388;
     }
     auto1
     {
         type            wall;
-        nFaces          3970;
-        startFace       240448;
+        nFaces          7172;
+        startFace       332560;
     }
     auto2
     {
         type            wall;
-        nFaces          7515;
-        startFace       244418;
+        nFaces          14908;
+        startFace       339732;
     }
     auto3
     {
         type            wall;
-        nFaces          1048;
-        startFace       251933;
+        nFaces          14500;
+        startFace       354640;
     }
     auto4
     {
         type            wall;
-        nFaces          6296;
-        startFace       252981;
+        nFaces          7172;
+        startFace       369140;
     }
     auto5
     {
         type            wall;
-        nFaces          732;
-        startFace       259277;
-    }
-    auto6
-    {
-        type            wall;
-        nFaces          854;
-        startFace       260009;
-    }
-    auto7
-    {
-        type            wall;
-        nFaces          1084;
-        startFace       260863;
-    }
-    auto8
-    {
-        type            wall;
-        nFaces          748;
-        startFace       261947;
-    }
-    auto9
-    {
-        type            wall;
-        nFaces          1635;
-        startFace       262695;
-    }
-    auto10
-    {
-        type            wall;
-        nFaces          1577;
-        startFace       264330;
-    }
-    auto11
-    {
-        type            wall;
-        nFaces          1428;
-        startFace       265907;
-    }
-    auto12
-    {
-        type            wall;
-        nFaces          240;
-        startFace       267335;
-    }
-    auto13
-    {
-        type            wall;
-        nFaces          1920;
-        startFace       267575;
-    }
-    auto14
-    {
-        type            wall;
-        nFaces          1840;
-        startFace       269495;
-    }
-    auto15
-    {
-        type            wall;
-        nFaces          2548;
-        startFace       271335;
-    }
-    auto16
-    {
-        type            wall;
-        nFaces          1459;
-        startFace       273883;
-    }
-    auto17
-    {
-        type            wall;
-        nFaces          1375;
-        startFace       275342;
-    }
-    auto18
-    {
-        type            wall;
-        nFaces          4202;
-        startFace       276717;
-    }
-    auto19
-    {
-        type            wall;
-        nFaces          1867;
-        startFace       280919;
-    }
-    auto20
-    {
-        type            wall;
-        nFaces          1017;
-        startFace       282786;
-    }
-    auto21
-    {
-        type            wall;
-        nFaces          240;
-        startFace       283803;
-    }
-    auto22
-    {
-        type            wall;
-        nFaces          3;
-        startFace       284043;
-    }
-    auto23
-    {
-        type            wall;
-        nFaces          1706;
-        startFace       284046;
-    }
-    auto24
-    {
-        type            wall;
-        nFaces          1094;
-        startFace       285752;
-    }
-    auto25
-    {
-        type            wall;
-        nFaces          1254;
-        startFace       286846;
-    }
-    auto26
-    {
-        type            wall;
-        nFaces          126;
-        startFace       288100;
+        nFaces          7172;
+        startFace       376312;
     }
 )
 
