@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/simulated_gas_sensor.dir/src/fake_gas_sensor.cpp.o"
-  "/home/bart/CFD_pipeline/simulation_ws/devel/lib/simulated_gas_sensor/simulated_gas_sensor.pdb"
   "/home/bart/CFD_pipeline/simulation_ws/devel/lib/simulated_gas_sensor/simulated_gas_sensor"
+  "/home/bart/CFD_pipeline/simulation_ws/devel/lib/simulated_gas_sensor/simulated_gas_sensor.pdb"
+  "CMakeFiles/simulated_gas_sensor.dir/src/fake_gas_sensor.cpp.o"
 )
 
 # Per-language clean rules from dependency scanning.

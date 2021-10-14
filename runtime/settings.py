@@ -2,7 +2,7 @@
 
 size_x = 10
 size_y = 10
-height = 2
+height = 3
 
 point_clearance = 5
 max_it = 500
@@ -23,7 +23,7 @@ java_loc = "../java/Extrude.jar"
 
 gaden_env_dir = "../simulation_ws/src/gaden/envs"
 empty_ros_dir = "../environments/ROS/empty_project"
-source_height = 0.5
+source_height = 2.0
 
 max_num_tries = 3
 z_min = 0

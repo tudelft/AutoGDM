@@ -2,7 +2,7 @@
 
 message(STATUS "gaden_player: 0 messages, 2 services")
 
-set(MSG_I_FLAGS "-Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg")
+set(MSG_I_FLAGS "-Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg")
 
 # Find all generators
 find_package(gencpp REQUIRED)
@@ -17,14 +17,14 @@ add_custom_target(gaden_player_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
-add_custom_target(_gaden_player_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "gaden_player" "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" ""
-)
-
 get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv" NAME_WE)
 add_custom_target(_gaden_player_generate_messages_check_deps_${_filename}
   COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "gaden_player" "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv" ""
+)
+
+get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
+add_custom_target(_gaden_player_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "gaden_player" "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" ""
 )
 
 #
@@ -36,13 +36,13 @@ add_custom_target(_gaden_player_generate_messages_check_deps_${_filename}
 
 ### Generating Services
 _generate_srv_cpp(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/gaden_player
 )
 _generate_srv_cpp(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/gaden_player
@@ -60,9 +60,9 @@ add_custom_target(gaden_player_generate_messages_cpp
 add_dependencies(gaden_player_generate_messages gaden_player_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
-add_dependencies(gaden_player_generate_messages_cpp _gaden_player_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv" NAME_WE)
+add_dependencies(gaden_player_generate_messages_cpp _gaden_player_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
 add_dependencies(gaden_player_generate_messages_cpp _gaden_player_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -77,13 +77,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS gaden_player_generate_messages_cpp)
 
 ### Generating Services
 _generate_srv_eus(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/gaden_player
 )
 _generate_srv_eus(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/gaden_player
@@ -101,9 +101,9 @@ add_custom_target(gaden_player_generate_messages_eus
 add_dependencies(gaden_player_generate_messages gaden_player_generate_messages_eus)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
-add_dependencies(gaden_player_generate_messages_eus _gaden_player_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv" NAME_WE)
+add_dependencies(gaden_player_generate_messages_eus _gaden_player_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
 add_dependencies(gaden_player_generate_messages_eus _gaden_player_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -118,13 +118,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS gaden_player_generate_messages_eus)
 
 ### Generating Services
 _generate_srv_lisp(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/gaden_player
 )
 _generate_srv_lisp(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/gaden_player
@@ -142,9 +142,9 @@ add_custom_target(gaden_player_generate_messages_lisp
 add_dependencies(gaden_player_generate_messages gaden_player_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
-add_dependencies(gaden_player_generate_messages_lisp _gaden_player_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv" NAME_WE)
+add_dependencies(gaden_player_generate_messages_lisp _gaden_player_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
 add_dependencies(gaden_player_generate_messages_lisp _gaden_player_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -159,13 +159,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS gaden_player_generate_messages_lisp
 
 ### Generating Services
 _generate_srv_nodejs(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/gaden_player
 )
 _generate_srv_nodejs(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/gaden_player
@@ -183,9 +183,9 @@ add_custom_target(gaden_player_generate_messages_nodejs
 add_dependencies(gaden_player_generate_messages gaden_player_generate_messages_nodejs)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
-add_dependencies(gaden_player_generate_messages_nodejs _gaden_player_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv" NAME_WE)
+add_dependencies(gaden_player_generate_messages_nodejs _gaden_player_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
 add_dependencies(gaden_player_generate_messages_nodejs _gaden_player_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -200,13 +200,13 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS gaden_player_generate_messages_node
 
 ### Generating Services
 _generate_srv_py(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/gaden_player
 )
 _generate_srv_py(gaden_player
-  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv"
+  "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/gaden_player
@@ -224,9 +224,9 @@ add_custom_target(gaden_player_generate_messages_py
 add_dependencies(gaden_player_generate_messages gaden_player_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
-add_dependencies(gaden_player_generate_messages_py _gaden_player_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/GasPosition.srv" NAME_WE)
+add_dependencies(gaden_player_generate_messages_py _gaden_player_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/bart/CFD_pipeline/simulation_ws/src/gaden/gaden_player/srv/WindPosition.srv" NAME_WE)
 add_dependencies(gaden_player_generate_messages_py _gaden_player_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -283,7 +283,7 @@ if(TARGET std_msgs_generate_messages_nodejs)
 endif()
 
 if(genpy_INSTALL_DIR AND EXISTS ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/gaden_player)
-  install(CODE "execute_process(COMMAND \"/usr/bin/python2\" -m compileall \"${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/gaden_player\")")
+  install(CODE "execute_process(COMMAND \"/usr/bin/python3\" -m compileall \"${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/gaden_player\")")
   # install generated code
   install(
     DIRECTORY ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/gaden_player

@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import pandas as pd
-from stl import mesh
+# from stl import mesh
 
 # patch class, a patch is a surface in the mesh
 # we use this class to store the faces it consists of and its type, e.g., 'wall', 'inlet', 'outlet
@@ -313,7 +313,7 @@ class environment:
     # run snappyHexMesh: create the mesh for CFD
     def snappyhexmesh(self):
         print(str(self.id)+' started meshing')
-        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && surfaceFeatureExtract && decomposePar && mpirun -np 8 snappyHexMesh -overwrite -parallel &&  reconstructParMesh -constant && autoPatch -overwrite ' + str(autopatch_angle) +' && mv 0.org 0')
+        os.system('cd '+ os.path.abspath(self.cfd_folder)+' && blockMesh && surfaceFeatureExtract && decomposePar && mpirun -np 4 snappyHexMesh -overwrite -parallel  &&  reconstructParMesh -constant && autoPatch -overwrite ' + str(autopatch_angle) +' && mv 0.org 0')
 
     # read in the surfaces created by openfoam, and save them as patches (= surfaces)
     def read_surfaces(self):
@@ -460,7 +460,7 @@ class environment:
                 k['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 eps['boundaryField'][patch.id] = {'type': 'zeroGradient'}
             elif patch.type == 'inlet':
-                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform -1 '}           
+                U['boundaryField'][patch.id] = {'type': 'surfaceNormalFixedValue', 'refValue': 'uniform -0.5 '}           
                 p['boundaryField'][patch.id] = {'type': 'zeroGradient'}
                 nut['boundaryField'][patch.id] = {'type': 'calculated','value':'uniform 0'}
                 k['boundaryField'][patch.id] = {'type': 'fixedValue','value':'uniform 0.00375'}

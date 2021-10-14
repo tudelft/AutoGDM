@@ -43,4 +43,4 @@ list(APPEND CATKIN_ORDERED_PACKAGES_BUILD_TYPE "catkin")
 
 set(CATKIN_MESSAGE_GENERATORS )
 
-set(CATKIN_METAPACKAGE_CMAKE_TEMPLATE "/usr/lib/python2.7/dist-packages/catkin_pkg/templates/metapackage.cmake.in")
+set(CATKIN_METAPACKAGE_CMAKE_TEMPLATE "/usr/lib/python3/dist-packages/catkin_pkg/templates/metapackage.cmake.in")

@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/gaden_player_generate_messages_lisp"
-  "/home/bart/CFD_pipeline/simulation_ws/devel/share/common-lisp/ros/gaden_player/srv/WindPosition.lisp"
   "/home/bart/CFD_pipeline/simulation_ws/devel/share/common-lisp/ros/gaden_player/srv/GasPosition.lisp"
+  "/home/bart/CFD_pipeline/simulation_ws/devel/share/common-lisp/ros/gaden_player/srv/WindPosition.lisp"
+  "CMakeFiles/gaden_player_generate_messages_lisp"
 )
 
 # Per-language clean rules from dependency scanning.

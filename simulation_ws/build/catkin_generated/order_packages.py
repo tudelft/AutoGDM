@@ -2,4 +2,4 @@
 source_root_dir = '/home/bart/CFD_pipeline/simulation_ws/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/home/bart/CFD_pipeline/simulation_ws/devel;/opt/ros/melodic'.split(';') if '/home/bart/CFD_pipeline/simulation_ws/devel;/opt/ros/melodic' != '' else []
+underlay_workspaces = '/opt/ros/noetic'.split(';') if '/opt/ros/noetic' != '' else []
