@@ -1,0 +1,6 @@
+[submodule "simulation_ws/olfaction_msgs"]
+	path = simulation_ws/olfaction_msgs
+	url = https://github.com/MAPIRlab/olfaction_msgs.git
+[submodule "simulation_ws/gaden"]
+	path = simulation_ws/gaden
+	url = https://github.com/Duisterhof/gaden

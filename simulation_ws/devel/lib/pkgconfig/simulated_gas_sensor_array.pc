@@ -1,8 +1,0 @@
-prefix=/home/bart/CFD_pipeline/simulation_ws/devel
-
-Name: simulated_gas_sensor_array
-Description: Description of simulated_gas_sensor_array
-Version: 1.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: roscpp visualization_msgs std_msgs olfaction_msgs nav_msgs tf

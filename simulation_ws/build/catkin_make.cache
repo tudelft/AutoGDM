@@ -1,2 +1,0 @@
-gaden/envs:gaden/gaden_environment:gaden/gaden_filament_simulator:gaden/gaden_player:gaden/gaden_preprocessing:gaden/simulated_anemometer:gaden/simulated_gas_sensor:gaden/simulated_gas_sensor_array:olfaction_msgs
--DCATKIN_DEVEL_PREFIX=/home/bart/CFD_pipeline/simulation_ws/devel -DCMAKE_INSTALL_PREFIX=/home/bart/CFD_pipeline/simulation_ws/install -G Unix Makefiles

@@ -1,8 +1,0 @@
-prefix=/home/bart/CFD_pipeline/simulation_ws/install
-
-Name: gaden_player
-Description: Description of gaden_player
-Version: 1.0.0
-Cflags: -I${prefix}/include -I/usr/include
-Libs: -L${prefix}/lib /usr/lib/x86_64-linux-gnu/libboost_iostreams.so.1.71.0
-Requires: roscpp visualization_msgs std_msgs nav_msgs tf
