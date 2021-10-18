@@ -1,5 +1,6 @@
 # AutoGDM: Fully Automated Gas Dispersion Modelling, And Environment Generation.
 <img  align="left"  src="https://github.com/Duisterhof/AutoGDM/blob/master/logo.png">
+<br/><br/>
 AutoGDM is the first fully automated gas dispersion modelling (GDM) and environment generation pipeline. It uses the ROS [GADEN](https://github.com/MAPIRlab/gaden) package as a filament simulator, and [OpenFOAM](https://www.openfoam.com/) CFD to generate a 3D flow field. We used AutoGDM to evolve the parameters of 'Sniffy Bug', the algorithm used onboard the first fully automated swarm of gas-seeking nano quadcopters.
 
  - [Paper](https://arxiv.org/abs/2107.05490)
@@ -87,5 +88,5 @@ Upon completion the gas data can be found in `simulation_ws/src/gaden/env/rand_e
 Please reach out to us if you encounter any problems or suggestions. AutoGDM is a work in progress, we are excited to see it beeing used! Reach out to Bart for all technical questions.
 
 ### Contributors
-Bart Duisterhof - Student & Maintainer - bduister@cs.cmu.edu
+Bart Duisterhof - Student & Maintainer - bduister@cs.cmu.edu <br />
 Prof. Guido de Croon - PI - G.C.H.E.deCroon@tudelft.nl
