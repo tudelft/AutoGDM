@@ -1,0 +1,22 @@
+<package>
+  <name>gaden_environment</name>
+  <version>1.0.0</version>
+  <description>Package for visualizing on RVIZ the simulation environment (walls, obstacles and gas source).</description>
+  <maintainer email="jgmonroy@uma.es">Javier Monroy</maintainer>
+
+  <license>GPLv3</license>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>roscpp</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>visualization_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>roscpp</run_depend>
+  
+</package>
