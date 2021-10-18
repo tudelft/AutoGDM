@@ -943,11 +943,14 @@ void CFilamentSimulator::save_state_to_file()
 	{
 		for (int y = 0; y < env_cells_y; y++)
 		{
-				// if(!(C[x][y][z]==0&& U[x][y][z]==0&& V[x][y][z]==0&& W[x][y][z]==0))
-				// {
-					//Save to file! -> "Cell_x Cell_y Cell_z, Gas_conc U V W"
+			for (int z = 0; z < env_cells_z; z++)
+			{
+				if(!(C[x][y][z]==0&& U[x][y][z]==0&& V[x][y][z]==0&& W[x][y][z]==0))
+				{
+				//Save to file! -> "Cell_x Cell_y Cell_z, Gas_conc U V W"
 				count += sprintf(&charArray[count], "%i %i %i %i %i %i %i\n",x, y, z,  (int)(1000* C[x][y][z]),  (int)(1000* U[x][y][z]),  (int)(1000* V[x][y][z]),  (int)(1000* W[x][y][z]));
-				// }
+				}
+			}
 		}
 	}
 	// for txt saving
