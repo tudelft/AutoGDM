@@ -11,6 +11,18 @@ AutoGDM is the first fully automated gas dispersion modelling (GDM) and environm
 
  -   [TU Delft MAVLab](https://mavlab.tudelft.nl/)
 
+When using AutoGDM, please cite our work:
+```
+@misc{duisterhof2021sniffy,
+      title={Sniffy Bug: A Fully Autonomous Swarm of Gas-Seeking Nano Quadcopters in Cluttered Environments}, 
+      author={Bardienus P. Duisterhof and Shushuai Li and Javier Burgués and Vijay Janapa Reddi and Guido C. H. E. de Croon},
+      year={2021},
+      eprint={2107.05490},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO}
+}
+```
+
 # Installation
 
 First clone the library including the submodules:
