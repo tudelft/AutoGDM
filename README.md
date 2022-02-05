@@ -28,7 +28,7 @@ When using AutoGDM, please cite our work:
 First clone the library including the submodules:
 
 ```
-git clone --recursive https://github.com/Duisterhof/AutoGDM.git
+git clone --recursive https://github.com/tudelft/AutoGDM.git
 ```
 
 
@@ -52,6 +52,10 @@ OpenJDK 64-Bit Server VM (build 11.0.11+9-Ubuntu-0ubuntu2.20.04, mixed mode, sha
 OpenFoam is the open-source CFD library we use to generate wind fields. To install it:
 
 ```
+sudo sh -c "wget -O - http://dl.openfoam.org/gpg.key | apt-key add -"
+sudo add-apt-repository http://dl.openfoam.org/ubuntu
+sudo add-apt-repository "http://dl.openfoam.org/ubuntu dev"
+sudo apt-get update
 sudo apt-get install openfoam7
 ```
 Then add the following to your bashrc file:

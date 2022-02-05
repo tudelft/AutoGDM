@@ -480,12 +480,14 @@ class environment:
 
     def make_ros_folder(self):
         self.ros_loc = os.path.abspath(gaden_env_dir) + '/' + self.id
-        if not os.path.exists(self.ros_loc):
-            command = 'cp -r ' + os.path.abspath(empty_ros_dir) + ' ' + self.ros_loc
-            os.system(command)
-        else:
-            command = 'rm -rf ' + self.ros_loc + ' && cp -r ' + os.path.abspath(empty_ros_dir) + ' ' + self.ros_loc
-            os.system(command)       
+        if os.path.exists(self.ros_loc):
+            command = 'rm -rf ' + self.ros_loc
+
+        command = 'mkdir -p ' + self.ros_loc
+        os.system(command)
+        command = 'cp -r ' + os.path.abspath(empty_ros_dir) + ' ' + self.ros_loc
+        os.system(command)
+      
 
     # obtain grid of wind vectors 
     def write_data(self):
