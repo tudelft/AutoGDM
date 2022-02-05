@@ -594,7 +594,7 @@ if __name__=="__main__":
     ## read in all environment binary pics folder 
     ## consult settings.py to change default 'env_pics_folder'
     environments = []
-    for file in glob.glob(env_pics_folder+"/*"):
+    for file in glob.glob(env_pics_folder+"/*.png"):
         environments.append(environment(os.path.abspath(file)))
     
     ## check if inversed folder exists, if not create
